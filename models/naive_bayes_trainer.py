@@ -16,7 +16,7 @@ model.drop(inplace=True, columns=[target_values])
 # initialize the dictionary model with a nested  dictionary called sum to save the calculations to use theme in the end
 statistics = {"sum": {"total_cases": len(copy_model.index)}}
 
-# start loop through  the list that contains the unique options in the class column
+# start loop through  the list that contains the unique target labels in the class column
 for target_value in column_trained_by.unique():
     #  for each option count the number of times it appears in the class column (we will need it for calculations in the end
     statistics['sum'][target_value] = (copy_model[target_values] == target_value).sum()
