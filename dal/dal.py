@@ -4,12 +4,14 @@ import os
 
 class Dal:
 
-    def __init__(self):
-        self.files_list=os.listdir("../data")
 
-
-
+    @staticmethod
     def load_data(self ,path):
         df=pd.read_csv(path)
-
         return df
+
+    @staticmethod
+    def get_list_of_files():
+        return os.listdir("data")
+
+
