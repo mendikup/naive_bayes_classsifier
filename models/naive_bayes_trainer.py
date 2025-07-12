@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import pprint
 
-class Naive_bayesian_model:
+class Naive_bayesian_trainer:
 
 
     @staticmethod

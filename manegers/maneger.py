@@ -1,7 +1,9 @@
+from sklearn.model_selection import train_test_split
 from dal.dal import Dal
 from ui.menu import Menu
 from utils.cleaner import Cleaner
 from utils.extract_keys import Extract_keys
+from models.naive_bayes_trainer import Naive_bayesian_trainer
 
 class Maneger:
 
@@ -44,7 +46,8 @@ class Maneger:
     def raw_df_handler(self, raw_df):
         cleaned_df = Cleaner.clean_data(raw_df)
         self.suggestions = Extract_keys.extract(cleaned_df)
-        self.model = Naive_bayes.train_model(train_df)
+        train_df, test_df = train_test_split(cleaned_df, test_size=0.3)
+        self.model = Naive_bayesian_trainer.train_model(train_df)
         self.accuracy = Tester.check_accuracy(self.model, test_df)
 
 
