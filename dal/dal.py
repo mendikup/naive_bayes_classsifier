@@ -6,7 +6,7 @@ class Dal:
 
 
     @staticmethod
-    def load_data(self ,path):
+    def load_data(path):
         df=pd.read_csv(path)
         return df
 
