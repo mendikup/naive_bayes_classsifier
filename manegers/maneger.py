@@ -19,8 +19,8 @@ class Maneger:
             if user_selection=="1":
                 list_of_files=Dal.get_list_of_files()
 
-                # send the list above to the function in the ui that gets the list
-                # and suggest the options to the user and return it's choice
+                # send the list above to the function in the UI that gets the list,
+                # suggest the options to the user and return it's choice
                 chosen_file= Menu.suggest_options(list_of_files)
                 raw_data=Dal.load_data("data/"+chosen_file)
                 self.raw_df_handler(raw_data)
@@ -29,9 +29,16 @@ class Maneger:
                 url = input("Enter a link or URL")
                 raw_df = Dal.load_data(url)
                 self.raw_df_handler(raw_df)
+
             elif user_selection== "3":
                 if self.model:
+                    # send the "suggestions" which contains the keys that represents the columns in the
+                    # data and values represents unique values that where in each column in the data,to
+                    # the function that asks the user what parmeters he wants to choose for checking
+
                     chosen_params = Menu.get_params(self.suggestions)
+
+
 
 
     def raw_df_handler(self, raw_df):
@@ -45,4 +52,3 @@ class Maneger:
 
 
 
-)

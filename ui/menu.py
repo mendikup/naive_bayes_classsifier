@@ -39,18 +39,18 @@ class Menu:
 
 
     @staticmethod
-    def get_parmas(suggestions:dict) ->str:
+    def get_parmas(suggestions:dict) ->dict:
 
         """create  a dictionary to save each option(number the user choose) as a key and the
-         parameters in values so we can store the options as a dictionary so we can send
+         parameters as values so we can store the options as a dictionary so we can send
          it to the bayes_model
         """
         selected_options = {}
 
         for suggestion in suggestions:
             print(f"for the parameter{suggestion}:")
-            selected_chois=Menu.suggest_options(suggestion)
-            selected_options[suggestions]=selected_chois
+            selected_choice=Menu.suggest_options(suggestion)
+            selected_options[suggestions]=selected_choice
 
         return selected_options
 
