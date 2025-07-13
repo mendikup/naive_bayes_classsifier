@@ -1,10 +1,10 @@
 from enum import unique
 
 import  pandas as pd
-class Extract_keys:
+class Extract:
 
     @staticmethod
-    def extract(df):
+    def extract_parameters_and_their_values(df):
         suggestions={}
         for column in df.columns[:-1]:
             unique_value_list=df[column].unique()
