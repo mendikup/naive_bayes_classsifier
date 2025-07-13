@@ -44,6 +44,13 @@ class Maneger:
                     chosen_params = Menu.get_params(self.params_and_values)
                     print(f"the answer is:  {Classifier.ask_a_question(self.model, chosen_params)}")
 
+                else:
+                    print("choose a file to work first")
+
+            else:
+                print("invalid input,try again")
+
+
 
 
 
