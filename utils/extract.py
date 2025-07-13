@@ -11,3 +11,7 @@ class Extract:
             suggestions[column]=unique_value_list
         return suggestions
 
+    @staticmethod
+    def extract_columns_list(df):
+        return list(df.columns)
+
