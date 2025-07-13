@@ -9,7 +9,7 @@ class Naive_bayesian_trainer:
     def train_model(df):
         copy_model = df.copy()
         trained_by = df.columns[-1]
-        df.sort_values(trained_by, inplace=True)
+        # df.sort_values(trained_by, inplace=True)
 
         column_trained_by = df[trained_by]
         # Remove the target column from the model DataFrame to ensure it's not mistakenly used as a feature during training

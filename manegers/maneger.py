@@ -48,13 +48,14 @@ class Maneger:
 
 
     def raw_df_handler(self, raw_df):
-        # cleaned_df = Cleaner.ensure_there_is_no_nan(raw_df)                     """  this row is making problems""'
-        self.params_and_values = Extract.extract_parameters_and_their_values(raw_df)
-        print(self.params_and_values)
+        self.suggest_deleting_columns(raw_df)
+        cleaned_df = Cleaner.ensure_there_is_no_nan(raw_df)
+        self.params_and_values = Extract.extract_parameters_and_their_values(cleaned_df)
 
 
         train_df, test_df = train_test_split(raw_df, test_size=0.3)
         self.model = Naive_bayesian_trainer.train_model(train_df)
+        print(self.model)
         self.accuracy = Tester.check_accuracy_percentage(self.model, test_df)
         print(f'The testing is over. {self.accuracy} %  Accuracy rate')
 
