@@ -2,6 +2,9 @@ from random import choice
 
 
 class Menu:
+    """
+    Handles user interaction in a CLI-based menu system.
+    """
     @staticmethod
     def show_menu():
         print("what would you like to do")
@@ -40,11 +43,12 @@ class Menu:
 
     @staticmethod
     def get_params(parameters:dict) ->dict:
-
-        """create  a dictionary to save each option(number the user choose) as a key and the
-         parameters as values so we can store the options as a dictionary so we can send
-         it to the bayes_model
         """
+               Ask the user to choose a value for each parameter (feature).
+
+               :param parameters: {column_name: [possible_values]}
+               :return: {column_name: chosen_value}
+               """
         selected_params_and_values = {}
 
         for parameter in parameters:

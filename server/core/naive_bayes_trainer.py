@@ -3,10 +3,22 @@ import numpy as np
 import pprint
 
 class Naive_bayesian_trainer:
+    """
+     Trains a Naive Bayes model from a given dataset.
+     """
 
 
     @staticmethod
     def train_model(df):
+        """
+               Builds a Naive Bayes model (nested dict of probabilities) from training data.
+
+               :param df: pandas DataFrame with labeled data.
+               :return: Nested dict {class_label: {column_name: {value: probability}}}
+               """
+        # 1. Count class frequencies (prior probabilities)
+        # 2. For each class and column, count value frequencies (likelihoods)
+        # 3. Normalize into probabilities, apply Laplace smoothing if needed
         copy_model = df.copy()
         trained_by = df.columns[-1]
         # df.sort_values(trained_by, inplace=True)

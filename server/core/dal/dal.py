@@ -4,7 +4,9 @@ import os
 
 
 class Dal:
-
+    """
+    Handles data access operations like reading CSV files or URLs.
+    """
 
     @staticmethod
     def load_data(file):

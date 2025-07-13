@@ -45,10 +45,7 @@ class Maneger:
 
             elif user_selection== "3":
                 if self.model:
-
-                    # sends the "params_and_values" which contains the keys that represents the columns in the
-                    # data and values represents unique values that where in each column in the data,to
-                    # the function that asks the user what parmeters he wants to choose for checking
+                    # Ask the user to choose values for specific parameters
                     chosen_params = Menu.get_params(self.params_and_values)
                     print(f"the answer is:  {Classifier.ask_a_question(self.model, chosen_params)}")
 
@@ -77,6 +74,11 @@ class Maneger:
 
 
     def suggest_deleting_columns(self, df):
+        """
+        Ask the user if they want to delete any columns before training.
+        Allows multiple deletions until the user types 'done'.
+        """
+
         choice = input("1. to delete any column of the table before training\n"
                        "2. to continue to training")
         if choice == "1":
