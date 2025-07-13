@@ -23,10 +23,10 @@ class Classifier:
                 # result %= 1
                 final_result[option] = result
 
-        for key, val in final_result.items():
-            print(f"{key} has {val}")
+        # for key, val in final_result.items():
+        #     print(f"{key} has {val}")
         strong = max(final_result, key=final_result.get)
-        print(f" according to the model the answer to your question in the  highest probability is {strong} ")
+        # print(f" according to the model the answer to your question in the  highest probability is {strong} ")
 
         return strong
 
