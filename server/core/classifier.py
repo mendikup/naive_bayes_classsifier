@@ -12,7 +12,7 @@ class Classifier:
                     try:
                         num = model[option][column][dict_test[column]]
                     except KeyError:
-                        num = 1e-10  # הסתברות זעירה במקום KeyError
+                        num = 1e-10  #
 
                     list_of_nums.append(num)
                 list_of_nums.append(model['sum'][option] / model['sum']['total_cases'])
@@ -25,8 +25,7 @@ class Classifier:
 
                 final_result[option] = result
 
-        # for key, val in final_result.items():
-        #     print(f"{key} has {val}")
+
         strong = max(final_result, key=final_result.get)
         # print(f" according to the model the answer to your question in the  highest probability is {strong} ")
 

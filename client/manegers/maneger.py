@@ -1,11 +1,12 @@
 from sklearn.model_selection import train_test_split
-from dal.dal import Dal
-from ui.menu import Menu
-from utils.cleaner import Cleaner
-from utils.extract import Extract
-from models.naive_bayes_trainer import Naive_bayesian_trainer
-from models.classifier import Classifier
-from tests.tester import Tester
+from client.ui.menu import Menu
+from client.utils.cleaner import Cleaner
+from client.utils.extract import Extract
+from server.core.naive_bayes_trainer import Naive_bayesian_trainer
+from server.core.classifier import Classifier
+from client.tests.tester import Tester
+import requests
+import pandas as pd
 
 class Maneger:
 
@@ -13,6 +14,7 @@ class Maneger:
         self.model = None
         self.params_and_values=None
         self.accuracy = None
+        self.url= "http://127.0.0.1:8000/"
 
 
     def run(self):
@@ -22,18 +24,24 @@ class Maneger:
             user_selection=Menu.show_menu()
 
             if user_selection=="1":
-                list_of_files=Dal.get_list_of_files()
+                list_of_files = requests.get(self.url + "get_list_of_files").json()["list_of_files"]
+
+
+
 
                 # send the list above to the function in the UI that gets the list,
                 # suggest the options to the user and return it's choice
                 chosen_file= Menu.suggest_options(list_of_files)
-                raw_data=Dal.load_data("data/" +chosen_file)
+                raw_data_as_list_of_dict=requests.get(f"{self.url}/load_data/{chosen_file}").json()["data"]
+                raw_data=pd.DataFrame(raw_data_as_list_of_dict)
                 self.raw_df_handler(raw_data)
 
             elif user_selection == "2":
                 url = input("Enter a link or URL")
-                raw_df = Dal.load_data(url)
-                self.raw_df_handler(raw_df)
+                raw_data_as_list_of_dict = requests.get(f"{self.url}/load_data/{chosen_file}").json()["data"]
+                raw_data = pd.DataFrame(raw_data_as_list_of_dict)
+
+                self.raw_df_handler(raw_data)
 
             elif user_selection== "3":
                 if self.model:
