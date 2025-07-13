@@ -48,15 +48,39 @@ class Maneger:
 
 
     def raw_df_handler(self, raw_df):
-        cleaned_df = Cleaner.clean_data(raw_df)
+        self.suggest_deleting_columns(raw_df)
+        cleaned_df = Cleaner.ensure_there_is_no_nan(raw_df)
         self.params_and_values = Extract.extract_parameters_and_their_values(cleaned_df)
-        print(self.params_and_values)
-        train_df, test_df = train_test_split(cleaned_df, test_size=0.3)
+
+
+        train_df, test_df = train_test_split(raw_df, test_size=0.3)
         self.model = Naive_bayesian_trainer.train_model(train_df)
+        print(self.model)
         self.accuracy = Tester.check_accuracy_percentage(self.model, test_df)
         print(f'The testing is over. {self.accuracy} %  Accuracy rate')
 
 
+
+    def suggest_deleting_columns(self, df):
+        choice = input("1. to delete any column of the table before training\n"
+                       "2. to continue to training")
+        if choice == "1":
+            columns_to_delete = []
+            list_of_columns = Extract.extract_columns_list(df)[:-1]
+            while len(list_of_columns) > 0:
+                chosen_column = Menu.suggest_options(list_of_columns)
+                columns_to_delete.append(chosen_column)
+                list_of_columns.remove(chosen_column)
+                done = input("write 'done' to execute, any other key to continue inserting")
+                if done == "done":
+                    break
+            print("executing..")
+            Cleaner.drop_requested_columns(df, columns_to_delete)
+        elif choice == "2":
+            print("Here we go")
+        else:
+            print("invalid input")
+            self.suggest_deleting_columns(df)
 
 
 
