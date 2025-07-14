@@ -49,7 +49,7 @@ class Maneger:
                 if self.model:
                     # Ask the user to choose values for specific parameters
                     chosen_params = Menu.get_params(self.params_and_values)
-                    print(f"the answer is:  {Classifier.ask_a_question(self.model, chosen_params)}")
+                    print(f"the answer is:  {Classifier.get_the_most_probability_predict(self.model, chosen_params)}")
 
                 else:
                     print("choose a file to work first")

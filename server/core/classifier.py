@@ -3,7 +3,7 @@ import  numpy as np
 class Classifier:
 
     @staticmethod
-    def ask_a_question(trained_model, dict_test):
+    def get_the_most_probability_predict(trained_model, dict_test):
         """
         Predicts the most probable classification using the Naive Bayes model.
 

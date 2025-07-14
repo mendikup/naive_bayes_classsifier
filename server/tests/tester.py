@@ -24,7 +24,7 @@ class Tester:
             row_values = test_df.iloc[i, :-1]
             for inx_row in row_values.index:
                 params_and_values[inx_row] = row_values[inx_row]
-            predicted = Classifier.ask_a_question(trained_model, params_and_values)
+            predicted = Classifier.get_the_most_probability_predict(trained_model, params_and_values)
             if predicted == has_to_be:
                 correct += 1
 
