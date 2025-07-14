@@ -14,7 +14,7 @@ class Maneger:
         self.model = None
         self.params_and_values=None
         self.accuracy = None
-        self.url= "http://127.0.0.1:8000/"
+        self.URL= "http://127.0.0.1:8000/"
 
 
     def run(self):
@@ -24,17 +24,12 @@ class Maneger:
             user_selection=Menu.show_menu()
 
             if user_selection=="1":
-
                 try:
-                    list_of_files = requests.get(self.url + "get_list_of_files").json()["list_of_files"]
-
-                    # send the list above to the function in the UI that gets the list,
-                    # suggest the options to the user and return it's choice
+                    list_of_files = requests.get(self.URL + "get_list_of_files").json()["list_of_files"]
                     chosen_file= Menu.suggest_options(list_of_files)
-                    raw_data_as_list_of_dict=requests.get(f"{self.url}/load_data/{chosen_file}").json()["data"]
+                    raw_data_as_list_of_dict=requests.get(f"{self.URL}/load_data/{chosen_file}").json()["data"]
                     raw_data=pd.DataFrame(raw_data_as_list_of_dict)
                     self.raw_df_handler(raw_data)
-
                 except Exception as e:
                     print(f"Error: {e}")
 
@@ -49,9 +44,6 @@ class Maneger:
 
                 except Exception as e:
                     print(f"Error: {e}")
-
-
-
 
 
             elif user_selection== "3":
@@ -69,17 +61,33 @@ class Maneger:
 
 
 
-
     def raw_df_handler(self, raw_df):
-        self.suggest_deleting_columns(raw_df)
+        raw_df= self.suggest_deleting_columns(raw_df)
+
         cleaned_df = Cleaner.ensure_there_is_no_nan(raw_df)
-        self.params_and_values = Extract.extract_parameters_and_their_values(cleaned_df)
+        self.params_and_values= Extract.extract_parameters_and_their_values(cleaned_df)
 
         train_df, test_df = train_test_split(raw_df, test_size=0.3)
-        self.model = Naive_bayesian_trainer.train_model(train_df)
-        print(self.model)
+
+
+        try:
+            response= requests.post(f"{self.URL}train_model", json=train_df.to_dict(orient="records"))
+            if response.status_code != 200:
+                print(f"Server error: {response.status_code}")
+                print(f"Text response: {response.text}")
+
+            self.model = response.json()
+
+
+        except Exception as e:
+         print(f"Error: {e}")
+
         self.accuracy = Tester.check_accuracy_percentage(self.model, test_df)
         print(f'The testing is over. {self.accuracy} %  Accuracy rate')
+
+
+
+
 
 
 
@@ -94,20 +102,28 @@ class Maneger:
         if choice == "1":
             columns_to_delete = []
             list_of_columns = Extract.extract_columns_list(df)[:-1]
+
             while len(list_of_columns) > 0:
                 chosen_column = Menu.suggest_options(list_of_columns)
                 columns_to_delete.append(chosen_column)
                 list_of_columns.remove(chosen_column)
                 done = input("write 'done' to execute, any other key to continue inserting")
+
                 if done == "done":
                     break
             print("executing..")
-            Cleaner.drop_requested_columns(df, columns_to_delete)
+            df = Cleaner.drop_requested_columns(df, columns_to_delete)
+
         elif choice == "2":
             print("Here we go")
+
         else:
             print("invalid input")
             self.suggest_deleting_columns(df)
+
+
+        return df
+
 
 
 

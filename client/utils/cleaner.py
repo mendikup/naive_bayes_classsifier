@@ -29,8 +29,7 @@ class Cleaner:
             percentage_of_nans = num_of_nans / num_of_rows
             if percentage_of_nans > threshold:
                 columns_to_drop.append(column)
-        df.drop(columns=columns_to_drop).copy()
-        return df
+        return df.drop(columns=columns_to_drop).copy()
 
     @staticmethod
     def drop_requested_columns(df, requested_columns):
@@ -40,5 +39,5 @@ class Cleaner:
            :param df: DataFrame.
            :param requested_columns: List of column names to drop.
            """
-        df.drop(columns=requested_columns).copy()
-        return df
+
+        return  df.drop(columns=requested_columns).copy()
