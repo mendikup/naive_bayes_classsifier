@@ -35,7 +35,7 @@ def  train_df(data: List[Dict[str, Any]]) -> dict:
 
 @router.post("/check_accuracy_rate")
 def check_accuracy(data:Dict[str,Any]) -> dict:
-    trained_model = data["train_model"]
+    trained_model = data["trained_model"]
     test_df = pd.DataFrame(data["test_df"])
     accuracy =  Tester.check_accuracy_percentage(trained_model,  test_df)
     return {"accuracy":accuracy}

@@ -61,7 +61,7 @@ class Maneger:
 
 
     def raw_df_handler(self, raw_df):
-        raw_df= self.suggest_deleting_columns(raw_df)
+        raw_df= self.suggest_user_to_delete_columns(raw_df)
 
         cleaned_df = Cleaner.ensure_there_is_no_nan(raw_df)
         self.params_and_values= Extract.extract_parameters_and_their_values(cleaned_df)
@@ -112,7 +112,7 @@ class Maneger:
 
 
 
-    def suggest_deleting_columns(self, df):
+    def suggest_user_to_delete_columns(self, df):
         """
         Ask the user if they want to delete any columns before training.
         Allows multiple deletions until the user types 'done'.
@@ -141,7 +141,7 @@ class Maneger:
 
         else:
             print("invalid input")
-            self.suggest_deleting_columns(df)
+            self.suggest_user_to_delete_columns(df)
 
 
         return df
