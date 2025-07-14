@@ -94,9 +94,15 @@ class Maneger:
                     print(f"Text response: {response.text}")
 
                 elif response.ok:
-                    accuracy_data= response.json()
-                    self.accuracy = accuracy_data["accuracy"]
-                    print(f'The testing is over. {self.accuracy} %  Accuracy rate')
+                    data = response.json()
+                    if "error" in data:
+                        print(f"\n❌ Server internal error: {data['error']}")
+                        print("📜 Traceback:")
+                        print(data.get("traceback", "No traceback provided."))
+                    else:
+                        self.accuracy = data["accuracy"]
+                        print(f"The testing is over. {self.accuracy} % Accuracy rate")
+
 
 
 
