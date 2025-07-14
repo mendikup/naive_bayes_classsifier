@@ -1,10 +1,12 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
+
 from server.core.dal.dal import Dal
 import pandas as pd
 from server.core.naive_bayes_trainer import Naive_bayesian_trainer
 from server.utils.convert_numpy_types import convert_numpy_object_to_numbers
 from typing import Dict, List, Any
+from server.tests.tester import Tester
 
 router = APIRouter()
 
@@ -25,10 +27,17 @@ def load_data(chosen_file:str) -> dict:
 
 
 @router.post("/train_model")
-# def  train_df(data:list[dict[str,any]]) -> dict:
 def  train_df(data: List[Dict[str, Any]]) -> dict:
     df = pd.DataFrame(data)
     statistic = Naive_bayesian_trainer.train_model(df)
     statistic = convert_numpy_object_to_numbers(statistic)
     return statistic
+
+@router.post("/check_accuracy_rate")
+def check_accuracy(data:Dict[str,Any]) -> dict:
+    trained_model = data["train_model"]
+    test_df = pd.DataFrame(data["test_df"])
+    accuracy =  Tester.check_accuracy_percentage(trained_model,  test_df)
+    return {"accuracy":accuracy}
+
 

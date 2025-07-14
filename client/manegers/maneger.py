@@ -2,9 +2,8 @@ from sklearn.model_selection import train_test_split
 from client.ui.menu import Menu
 from client.utils.cleaner import Cleaner
 from client.utils.extract import Extract
-from server.core.naive_bayes_trainer import Naive_bayesian_trainer
 from server.core.classifier import Classifier
-from client.tests.tester import Tester
+from server.tests.tester import Tester
 import requests
 import pandas as pd
 
@@ -71,19 +70,41 @@ class Maneger:
 
 
         try:
-            response= requests.post(f"{self.URL}train_model", json=train_df.to_dict(orient="records"))
+            response= requests.post(
+                    f"{self.URL}train_model",
+                            json=train_df.to_dict(orient="records"))
+
             if response.status_code != 200:
                 print(f"Server error: {response.status_code}")
                 print(f"Text response: {response.text}")
 
-            self.model = response.json()
+            elif response.ok:
+                self.model = response.json()
+
+
+                response = requests.post(
+                    f"{self.URL}check_accuracy_rate"
+                         ,     json= {"trained_model": self.model,
+                                     "test_df":test_df.to_dict(orient = "records")
+                                     }
+                                )
+
+                if response.status_code != 200:
+                    print(f"Server error: {response.status_code}")
+                    print(f"Text response: {response.text}")
+
+                elif response.ok:
+                    accuracy_data= response.json()
+                    self.accuracy = accuracy_data["accuracy"]
+                    print(f'The testing is over. {self.accuracy} %  Accuracy rate')
+
+
 
 
         except Exception as e:
          print(f"Error: {e}")
 
-        self.accuracy = Tester.check_accuracy_percentage(self.model, test_df)
-        print(f'The testing is over. {self.accuracy} %  Accuracy rate')
+
 
 
 
@@ -100,6 +121,7 @@ class Maneger:
         choice = input("1. to delete any column of the table before training\n"
                        "2. to continue to training")
         if choice == "1":
+            print("here are all the columns")
             columns_to_delete = []
             list_of_columns = Extract.extract_columns_list(df)[:-1]
 
