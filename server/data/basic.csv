@@ -4,4 +4,8 @@ sunny,weekday,no
 rainy,weekday,no
 rainy,weekend,yes
 sunny,weekend,yes
-
+rainy,weekday,no
+sunny,weekday,no
+rainy,weekend,no
+rainy,weekend,yes
+sunny,weekend,yes
