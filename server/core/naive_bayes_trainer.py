@@ -4,46 +4,61 @@ import pprint
 
 class Naive_bayesian_trainer:
     """
-     Trains a Naive Bayes model from a given dataset.
+    Trains a Naive Bayes model from a given dataset.
      """
 
 
-    @staticmethod
-    def train_model(df):
-        """
-               Builds a Naive Bayes model (nested dict of probabilities) from training data.
+@staticmethod
+def train_model(df):
+    """
+           Builds a Naive Bayes model (nested dict of probabilities) from training data.
 
-               :param df: pandas DataFrame with labeled data.
-               :return: Nested dict {class_label: {column_name: {value: probability}}}
-               """
-        # 1. Count class frequencies (prior probabilities)
-        # 2. For each class and column, count value frequencies (likelihoods)
-        # 3. Normalize into probabilities, apply Laplace smoothing if needed
-        copy_model = df.copy()
-        trained_by = df.columns[-1]
-        # df.sort_values(trained_by, inplace=True)
+           :param df: pandas DataFrame with labeled data.
+           :return: Nested dict {class_label: {column_name: {value: probability}}}
+           """
+    # 1. Count class frequencies (prior probabilities)
+    # 2. For each class and column, count value frequencies (likelihoods)
+    # 3. Normalize into probabilities, apply Laplace smoothing if needed
 
-        column_trained_by = df[trained_by]
-        # Remove the target column from the model DataFrame to ensure it's not mistakenly used as a feature during training
-        df.drop(inplace=True, columns=[trained_by])
-        # initialize the dictionary model with a nested  dictionary called sum to save the calculations to use theme in the end
-        statistics = {"sum": {"total_cases": len(copy_model.index)}}
+    # Make a copy to preserve the original data (will be used for calculations)
+    df_for_stats = df.copy()
 
-        # start loop through  the list that contains the unique target labels in the class column
-        for target_value in column_trained_by.unique():
-            #  for each option count the number of times it appears in the class column (we will need it for calculations in the end
-            statistics['sum'][target_value] = (copy_model[trained_by] == target_value).sum()
+    # The name of the target column (i.e., the column to be predicted)
+    target_column = df.columns[-1]
 
-            statistics[target_value] = {}
-            for column in df.columns:
-                statistics[target_value][column] = {}
-                for unique_key in df[column].unique():
-                    statistics[target_value][column][unique_key] = (((copy_model[column] == unique_key) & (copy_model[trained_by] == target_value)).sum() + 1) / statistics['sum'][target_value]
+    # Extract the target values (class labels) to a separate Series
+    target_values = df[target_column]
 
-        return statistics
+    # Remove the target column from the training data to avoid using it as a feature
+    df.drop(columns=[target_column], inplace=True)
 
+    # Initialize the statistics dictionary. "sum" will hold global totals.
+    statistics = {
+        "sum": {
+            "total_cases": len(df_for_stats.index)  # Total number of rows in the dataset
+        }
+    }
 
+    # Iterate over each unique class label in the target column
+    for class_label in target_values.unique():
+        # Count how many times this class label appears in the dataset
+        statistics["sum"][class_label] = (df_for_stats[target_column] == class_label).sum()
 
+        # Initialize sub-dictionary for this class
+        statistics[class_label] = {}
 
+        # Iterate over each feature column
+        for feature_column in df.columns:
+            statistics[class_label][feature_column] = {}
 
+            # Iterate over each unique value in the feature column
+            for feature_value in df[feature_column].unique():
+                # Count how many times this value appears for this class (with Laplace smoothing)
+                count = ((df_for_stats[feature_column] == feature_value) &
+                         (df_for_stats[target_column] == class_label)).sum()
 
+                # Apply Laplace smoothing (+1 numerator)
+                statistics[class_label][feature_column][feature_value] = (count + 1) / statistics["sum"][
+                    class_label]
+
+    return statistics

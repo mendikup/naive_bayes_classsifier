@@ -34,10 +34,10 @@ class Maneger:
                 chosen_file= Menu.suggest_options(list_of_files)
                 raw_data_as_list_of_dict=requests.get(f"{self.url}/load_data/{chosen_file}").json()["data"]
                 raw_data=pd.DataFrame(raw_data_as_list_of_dict)
-                self.raw_df_handler(raw_data)
+                self.params_and_values,self.model, self.accuracy = self.raw_df_handler(raw_data)
 
             elif user_selection == "2":
-                url = input("Enter a link or URL")
+                self.url= input("Enter a link or URL")
                 raw_data_as_list_of_dict = requests.get(f"{self.url}/load_data/{chosen_file}").json()["data"]
                 raw_data = pd.DataFrame(raw_data_as_list_of_dict)
 
@@ -62,14 +62,16 @@ class Maneger:
     def raw_df_handler(self, raw_df):
         self.suggest_deleting_columns(raw_df)
         cleaned_df = Cleaner.ensure_there_is_no_nan(raw_df)
-        self.params_and_values = Extract.extract_parameters_and_their_values(cleaned_df)
+        params_and_values = Extract.extract_parameters_and_their_values(cleaned_df)
 
-
+        # split the dataset 70% for training the model and 30% to test its answers
         train_df, test_df = train_test_split(raw_df, test_size=0.3)
-        self.model = Naive_bayesian_trainer.train_model(train_df)
+        model = Naive_bayesian_trainer.train_model(train_df)
         print(self.model)
-        self.accuracy = Tester.check_accuracy_percentage(self.model, test_df)
-        print(f'The testing is over. {self.accuracy} %  Accuracy rate')
+        accuracy = Tester.check_accuracy_percentage(self.model, test_df)
+
+        return params_and_values , model ,accuracy
+
 
 
 
