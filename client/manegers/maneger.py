@@ -24,24 +24,35 @@ class Maneger:
             user_selection=Menu.show_menu()
 
             if user_selection=="1":
-                list_of_files = requests.get(self.url + "get_list_of_files").json()["list_of_files"]
+
+                try:
+                    list_of_files = requests.get(self.url + "get_list_of_files").json()["list_of_files"]
+
+                    # send the list above to the function in the UI that gets the list,
+                    # suggest the options to the user and return it's choice
+                    chosen_file= Menu.suggest_options(list_of_files)
+                    raw_data_as_list_of_dict=requests.get(f"{self.url}/load_data/{chosen_file}").json()["data"]
+                    raw_data=pd.DataFrame(raw_data_as_list_of_dict)
+                    self.raw_df_handler(raw_data)
+
+                except Exception as e:
+                    print(f"Error: {e}")
 
 
-
-
-                # send the list above to the function in the UI that gets the list,
-                # suggest the options to the user and return it's choice
-                chosen_file= Menu.suggest_options(list_of_files)
-                raw_data_as_list_of_dict=requests.get(f"{self.url}/load_data/{chosen_file}").json()["data"]
-                raw_data=pd.DataFrame(raw_data_as_list_of_dict)
-                self.raw_df_handler(raw_data)
 
             elif user_selection == "2":
-                url = input("Enter a link or URL")
-                raw_data_as_list_of_dict = requests.get(f"{self.url}/load_data/{chosen_file}").json()["data"]
-                raw_data = pd.DataFrame(raw_data_as_list_of_dict)
+                try:
+                    url = input("Enter a link or URL")
+                    raw_data_as_list_of_dict = requests.get(f"{url}/load_data/{chosen_file}").json()["data"]
+                    raw_data = pd.DataFrame(raw_data_as_list_of_dict)
+                    self.raw_df_handler(raw_data)
 
-                self.raw_df_handler(raw_data)
+                except Exception as e:
+                    print(f"Error: {e}")
+
+
+
+
 
             elif user_selection== "3":
                 if self.model:
@@ -63,7 +74,6 @@ class Maneger:
         self.suggest_deleting_columns(raw_df)
         cleaned_df = Cleaner.ensure_there_is_no_nan(raw_df)
         self.params_and_values = Extract.extract_parameters_and_their_values(cleaned_df)
-
 
         train_df, test_df = train_test_split(raw_df, test_size=0.3)
         self.model = Naive_bayesian_trainer.train_model(train_df)

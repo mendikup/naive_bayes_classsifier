@@ -12,13 +12,13 @@ class Cleaner:
             :param df: DataFrame possibly containing NaN.
             :return: Cleaned DataFrame.
             """
-        Cleaner.drop_columns_with_nan_above_threshold(df, threshold=0.6)
-        Cleaner.drop_empty_rows(df)
+        df=Cleaner.drop_columns_with_nan_above_threshold(df, threshold=0.6)
+        df= Cleaner.drop_empty_rows(df)
         return df
 
     @staticmethod
     def drop_empty_rows(df):
-        df.dropna(axis=0, inplace=True)
+        return  df.dropna(axis=0).copy()
 
     @staticmethod
     def drop_columns_with_nan_above_threshold(df, threshold=0.6):
@@ -29,7 +29,8 @@ class Cleaner:
             percentage_of_nans = num_of_nans / num_of_rows
             if percentage_of_nans > threshold:
                 columns_to_drop.append(column)
-        df.drop(columns=columns_to_drop, inplace=True)
+        df.drop(columns=columns_to_drop).copy()
+        return df
 
     @staticmethod
     def drop_requested_columns(df, requested_columns):
@@ -39,4 +40,5 @@ class Cleaner:
            :param df: DataFrame.
            :param requested_columns: List of column names to drop.
            """
-        df.drop(columns=requested_columns, inplace=True)
+        df.drop(columns=requested_columns).copy()
+        return df

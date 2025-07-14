@@ -35,9 +35,9 @@ class Classifier:
                 final_result[option] = result
 
 
-        strong = max(final_result, key=final_result.get)
+        most_prob = max(final_result, key=final_result.get)
         # print(f" according to the model the answer to your question in the  highest probability is {strong} ")
 
-        return strong
+        return most_prob
 
 
