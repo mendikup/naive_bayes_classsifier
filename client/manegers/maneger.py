@@ -3,7 +3,7 @@ from client.ui.menu import Menu
 from client.utils.cleaner import Cleaner
 from client.utils.extract import Extract
 from server.core.classifier import Classifier
-from server.tests.tester import Tester
+from server.tests.test_accuracy import Tester
 import requests
 import pandas as pd
 

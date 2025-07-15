@@ -12,7 +12,7 @@ class Classifier:
         :return: Most probable class label.
         """
 
-        # Compute  probability for each label using conditional probabilities
+        # calculate  probability for each label using conditional probabilities
         final_result = {}
         for label in trained_model["sum"]:
             likelihoods = []
