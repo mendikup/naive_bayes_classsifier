@@ -7,7 +7,7 @@ from server.tests.test_accuracy import Tester
 import requests
 import pandas as pd
 
-class Maneger:
+class Manager:
 
     def __init__(self):
         self.model = None

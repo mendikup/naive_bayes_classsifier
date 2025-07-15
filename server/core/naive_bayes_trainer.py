@@ -29,7 +29,7 @@ class Naive_bayesian_trainer:
         # initialize the dictionary model with a nested  dictionary called sum to save the calculations to use theme in the end
         bayes_model = {"sum": {"total_cases": len(df_without_target_value_column.index)}}
 
-        # start loop through  the list that contains the unique target labels in the class column
+
         for target_value in column_trained_by.unique():
             #  for each option count the number of times it appears in the class column (we will need it for calculations in the end
             bayes_model['sum'][target_value] = (df[trained_by] == target_value).sum()
@@ -42,8 +42,13 @@ class Naive_bayesian_trainer:
                     # Creates a boolean mask for rows where the feature equals unique_key
                     # and the target column equals target_value
                     mask = ((df[feature] == unique_key) & (df[trained_by] == target_value))
+                    match_count = mask.sum() + 1  # Includes Laplace
                     num_unique_feature_values = df[feature].nunique()
-                    bayes_model[target_value][feature][unique_key] = (mask.sum() + 1) / bayes_model['sum'][target_value] + num_unique_feature_values
+                    total_target_value_count = bayes_model['sum'][ target_value] + num_unique_feature_values  # Includes Laplace
+
+
+
+                    bayes_model[target_value][feature][unique_key] = match_count/total_target_value_count
 
         return bayes_model
 

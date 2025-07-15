@@ -1,5 +1,5 @@
-from client.manegers.maneger import Maneger
+from client.managers.manager import Manager
 
-mangr=Maneger()
+manager=Manager()
 
-mangr.run()
+manager.run()
