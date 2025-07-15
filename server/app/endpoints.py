@@ -6,7 +6,7 @@ import pandas as pd
 from server.core.naive_bayes_trainer import Naive_bayesian_trainer
 from server.utils.convert_numpy_types import convert_numpy_object_to_numbers
 from typing import Dict, List, Any
-from server.tests.tester import Tester
+from server.tests.test_accuracy import Tester
 
 router = APIRouter()
 
