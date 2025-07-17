@@ -7,6 +7,7 @@ from server.core.naive_bayes_trainer import Naive_bayesian_trainer
 from server.utils.convert_numpy_types import convert_numpy_object_to_numbers
 from typing import Dict, List, Any
 from server.tests.test_accuracy import Tester
+from server.core.classifier import Classifier
 
 router = APIRouter()
 
@@ -39,5 +40,14 @@ def check_accuracy(data:Dict[str,Any]) -> dict:
     test_df = pd.DataFrame(data["test_df"])
     accuracy =  Tester.check_accuracy_percentage(trained_model,  test_df)
     return {"accuracy":accuracy}
+
+
+@router.post("/predict")
+def predict(data: Dict[str, Any]) -> dict:
+    """Return a prediction from a trained model."""
+    trained_model = data["trained_model"]
+    params = data["params"]
+    prediction = Classifier.get_the_most_probability_predict(trained_model, params)
+    return {"prediction": prediction}
 
 
