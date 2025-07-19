@@ -49,8 +49,17 @@ class Manager:
                 if self.model:
                     # Ask the user to choose values for specific parameters
                     chosen_params = Menu.get_params(self.params_and_values)
-                    print(f"the answer is:  {Classifier.get_the_most_probability_predict(self.model, chosen_params)}")
+                    response = requests.post(
+                        f"{self.URL}predict",
+                        json={"trained_model": self.model, "params": chosen_params},
+                    )
 
+                    if response.status_code != 200:
+                        print(f"Server error: {response.status_code}")
+                        print(f"Text response: {response.text}")
+                    elif response.ok:
+                        prediction = response.json().get("prediction")
+                        print(f"the answer is:  {prediction}")
                 else:
                     print("choose a file to work first")
 

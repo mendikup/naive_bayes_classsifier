@@ -1,12 +1,12 @@
+import traceback
 from fastapi import APIRouter
-from pydantic import BaseModel
-
+from server.core.classifier import Classifier
 from server.core.dal.dal import Dal
 import pandas as pd
 from server.core.naive_bayes_trainer import Naive_bayesian_trainer
 from server.utils.convert_numpy_types import convert_numpy_object_to_numbers
 from typing import Dict, List, Any
-from server.tests.tester import Tester
+from server.tests.test_accuracy import Tester
 
 router = APIRouter()
 
@@ -34,10 +34,23 @@ def  train_df(data: List[Dict[str, Any]]) -> dict:
     return statistic
 
 @router.post("/check_accuracy_rate")
-def check_accuracy(data:Dict[str,Any]) -> dict:
-    trained_model = data["train_model"]
-    test_df = pd.DataFrame(data["test_df"])
-    accuracy =  Tester.check_accuracy_percentage(trained_model,  test_df)
-    return {"accuracy":accuracy}
+def check_accuracy(data: Dict[str, Any]) -> dict:
+    try:
+        trained_model = data["trained_model"]
+        test_df = pd.DataFrame(data["test_df"])
+        accuracy = Tester.check_accuracy_percentage(trained_model, test_df)
+        return {"accuracy": accuracy}
+    except Exception as e:
+        return {
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }
 
 
+@router.post("/predict")
+def predict(data: Dict[str, Any]) -> dict:
+    """Return a prediction from a trained model."""
+    trained_model = data["trained_model"]
+    params = data["params"]
+    prediction = Classifier.get_the_most_probability_predict(trained_model, params)
+    return {"prediction": prediction}
