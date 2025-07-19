@@ -1,4 +1,6 @@
+import traceback
 from fastapi import APIRouter
+from server.core.classifier import Classifier
 from server.core.dal.dal import Dal
 import pandas as pd
 from server.core.naive_bayes_trainer import Naive_bayesian_trainer
@@ -32,10 +34,23 @@ def  train_df(data: List[Dict[str, Any]]) -> dict:
     return statistic
 
 @router.post("/check_accuracy_rate")
-def check_accuracy(data:Dict[str,Any]) -> dict:
+def check_accuracy(data: Dict[str, Any]) -> dict:
+    try:
+        trained_model = data["trained_model"]
+        test_df = pd.DataFrame(data["test_df"])
+        accuracy = Tester.check_accuracy_percentage(trained_model, test_df)
+        return {"accuracy": accuracy}
+    except Exception as e:
+        return {
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }
+
+
+@router.post("/predict")
+def predict(data: Dict[str, Any]) -> dict:
+    """Return a prediction from a trained model."""
     trained_model = data["trained_model"]
-    test_df = pd.DataFrame(data["test_df"])
-    accuracy =  Tester.check_accuracy_percentage(trained_model,  test_df)
-    return {"accuracy":accuracy}
-
-
+    params = data["params"]
+    prediction = Classifier.get_the_most_probability_predict(trained_model, params)
+    return {"prediction": prediction}

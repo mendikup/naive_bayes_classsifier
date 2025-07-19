@@ -21,7 +21,7 @@ class Classifier:
 
             for feature ,value in dict_test.items():
                 try:
-                    conditional_prob = trained_model[label][feature][dict_test[value]]
+                    conditional_prob = trained_model[label][feature][value]
                 except KeyError:
                     conditional_prob = 1e-10  #if the specific value is missing we add min value
 
