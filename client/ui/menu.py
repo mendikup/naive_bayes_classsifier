@@ -13,33 +13,19 @@ class Menu:
                       "3. Analyze by bayesian model statistics")
         return choise
 
-
     @staticmethod
-    def suggest_options(options:list) -> str:
-        choices = {}
-        print("please select an option from the option below:")
-
-        i = 1
-
-        for option in options:
-            choices[i] = option
+    def suggest_options(options: list) -> str:
+        print("Please select an option:")
+        for i, option in enumerate(options, start=1):
             print(f"{i}. {option}")
-            i+=1
 
-        choice = input()
-
-        if not choice.isdigit():
-            print("enter numbers only")
-            return Menu.suggest_options(options)
-
-        int_choice=int(choice)
-
-        if not (0 < int_choice < i):
-            print(f"enter a number between 1 and {i-1}")
-            return Menu.suggest_options(options)
-
-        return choices[int_choice]
-
+        while True:
+            choice = input("Enter your choice: ")
+            if choice.isdigit():
+                index = int(choice)
+                if 1 <= index <= len(options):
+                    return options[index - 1]
+            print("Invalid input. Try again.")
 
     @staticmethod
     def get_params(parameters:dict) ->dict:

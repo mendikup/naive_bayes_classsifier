@@ -3,11 +3,11 @@ from client.ui.menu import Menu
 from client.utils.cleaner import Cleaner
 from client.utils.extract import Extract
 from server.core.classifier import Classifier
-from server.tests.tester import Tester
+from server.tests.test_accuracy import Tester
 import requests
 import pandas as pd
 
-class Maneger:
+class Manager:
 
     def __init__(self):
         self.model = None
@@ -49,7 +49,7 @@ class Maneger:
                 if self.model:
                     # Ask the user to choose values for specific parameters
                     chosen_params = Menu.get_params(self.params_and_values)
-                    print(f"the answer is:  {Classifier.ask_a_question(self.model, chosen_params)}")
+                    print(f"the answer is:  {Classifier.get_the_most_probability_predict(self.model, chosen_params)}")
 
                 else:
                     print("choose a file to work first")
@@ -61,7 +61,7 @@ class Maneger:
 
 
     def raw_df_handler(self, raw_df):
-        raw_df= self.suggest_deleting_columns(raw_df)
+        raw_df= self.suggest_user_to_delete_columns(raw_df)
 
         cleaned_df = Cleaner.ensure_there_is_no_nan(raw_df)
         self.params_and_values= Extract.extract_parameters_and_their_values(cleaned_df)
@@ -118,7 +118,7 @@ class Maneger:
 
 
 
-    def suggest_deleting_columns(self, df):
+    def suggest_user_to_delete_columns(self, df):
         """
         Ask the user if they want to delete any columns before training.
         Allows multiple deletions until the user types 'done'.
@@ -147,7 +147,7 @@ class Maneger:
 
         else:
             print("invalid input")
-            self.suggest_deleting_columns(df)
+            self.suggest_user_to_delete_columns(df)
 
 
         return df

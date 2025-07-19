@@ -3,7 +3,7 @@ import  numpy as np
 class Classifier:
 
     @staticmethod
-    def ask_a_question(trained_model, dict_test):
+    def get_the_most_probability_predict(trained_model, dict_test):
         """
         Predicts the most probable classification using the Naive Bayes model.
 
@@ -12,7 +12,7 @@ class Classifier:
         :return: Most probable class label.
         """
 
-        # Compute  probability for each label using conditional probabilities
+        # calculate  probability for each label using conditional probabilities
         final_result = {}
         for label in trained_model["sum"]:
             likelihoods = []
