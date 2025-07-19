@@ -19,7 +19,7 @@ class Manager:
         running=True
 
         while running:
-            user_selection=Menu.show_menu()
+            user_selection = Menu.show_menu()
 
             if user_selection=="1":
                 try:
@@ -44,7 +44,7 @@ class Manager:
                     print(f"Error: {e}")
 
 
-            elif user_selection== "3":
+            elif user_selection == "3":
                 if self.model:
                     # Ask the user to choose values for specific parameters
                     chosen_params = Menu.get_params(self.params_and_values)
@@ -62,6 +62,9 @@ class Manager:
                 else:
                     print("choose a file to work first")
 
+            elif user_selection in ["4", "q", "Q", "quit", "exit"]:
+                print("Exiting...")
+                running = False
             else:
                 print("invalid input,try again")
 
