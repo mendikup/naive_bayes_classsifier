@@ -1,6 +1,4 @@
 from fastapi import APIRouter
-from pydantic import BaseModel
-
 from server.core.dal.dal import Dal
 import pandas as pd
 from server.core.naive_bayes_trainer import Naive_bayesian_trainer
