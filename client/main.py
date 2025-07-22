@@ -1,4 +1,4 @@
-from client.managers.manager import Manager
+from managers.manager import Manager
 
 manager=Manager()
 

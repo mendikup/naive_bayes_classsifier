@@ -4,7 +4,7 @@ from core.classifier import Classifier
 from core.dal.dal import Dal
 import pandas as pd
 from core.naive_bayes_trainer import Naive_bayesian_trainer
-from utils.convert_numpy_types import convert_numpy_object_to_numbers
+from server_utils.convert_numpy_types import convert_numpy_object_to_numbers
 from typing import Dict, List, Any
 from tests.test_accuracy import Tester
 

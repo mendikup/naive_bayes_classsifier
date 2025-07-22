@@ -18,7 +18,6 @@ class Menu:
         print("Please select an option:")
         for i, option in enumerate(options, start=1):
             print(f"{i}. {option}")
-
         while True:
             choice = input("Enter your choice: ")
             if choice.isdigit():

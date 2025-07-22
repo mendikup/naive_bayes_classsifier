@@ -1,9 +1,7 @@
 from sklearn.model_selection import train_test_split
-from client.ui.menu import Menu
-from client.utils.cleaner import Cleaner
-from client.utils.extract import Extract
-from server.core.classifier import Classifier
-from server.tests.test_accuracy import Tester
+from ui.menu import Menu
+from utils.cleaner import Cleaner
+from utils.extract import Extract
 import requests
 import pandas as pd
 
@@ -13,7 +11,7 @@ class Manager:
         self.model = None
         self.params_and_values=None
         self.accuracy = None
-        self.URL= "http://127.0.0.1:8000/"
+        self.URL= "http://my_server:8000/"
 
 
     def run(self):
