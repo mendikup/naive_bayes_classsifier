@@ -44,7 +44,6 @@ class Manager:
                 except Exception as e:
                     print(f"Error: {e}")
 
-
             elif user_selection== "3":
                 if self.model:
                     # Ask the user to choose values for specific parameters
@@ -77,7 +76,6 @@ class Manager:
 
         train_df, test_df = train_test_split(raw_df, test_size=0.3)
 
-
         try:
             response= requests.post(
                     f"{self.URL}train_model",
@@ -89,7 +87,6 @@ class Manager:
 
             elif response.ok:
                 self.model = response.json()
-
 
                 response = requests.post(
                     f"{self.URL}check_accuracy_rate"
@@ -105,7 +102,7 @@ class Manager:
                 elif response.ok:
                     data = response.json()
                     if "error" in data:
-                        print(f"\n❌ Server internal error: {data['error']}")
+                        print(f"\n Server internal error: {data['error']}")
                         print("📜 Traceback:")
                         print(data.get("traceback", "No traceback provided."))
                     else:

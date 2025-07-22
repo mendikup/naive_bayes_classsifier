@@ -1,4 +1,4 @@
-from server.core.classifier import Classifier
+from core.classifier import Classifier
 
 class Tester:
     """
