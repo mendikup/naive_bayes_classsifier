@@ -11,11 +11,18 @@ class Dal:
     @staticmethod
     def load_data(file):
         path=f"data/{file}"
-        df=pd.read_csv(path)
+        print(path)
+        # path = os.path.join("data", file)
+
+        # print(os.path.dirname(path))
+        if os.path.exists(path):
+            print("tesssssssssssssssssssssssssssssssssssssssssssssssssssssss")
+        else:
+            print("nooooooooooooooooooooooooooooooooooooooooooooooo")
+        df = pd.read_csv(path)
         return df
 
     @staticmethod
     def get_list_of_files():
         return os.listdir("data")
-
 

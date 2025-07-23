@@ -25,5 +25,5 @@ class Extract:
         """
         Returns list of all column names in the DataFrame.
         """
-        return list(df.columns)
+        return list(df.columns)[:-1]
 

@@ -3,12 +3,12 @@ import  numpy as np
 class Classifier:
 
     @staticmethod
-    def get_the_most_probability_predict(trained_model, dict_test):
+    def get_the_most_probability_predict(trained_model, params_and_values):
         """
         Predicts the most probable classification using the Naive Bayes model.
 
         :param trained_model: Nested dictionary of conditional probabilities.
-        :param dict_test: Dictionary of chosen attribute values {column_name: value}.
+        :param params_and_values: Dictionary of chosen attribute values {column_name: value}.
         :return: Most probable class label.
         """
 
@@ -19,7 +19,7 @@ class Classifier:
             if label == "total_cases":
                 continue
 
-            for feature ,value in dict_test.items():
+            for feature ,value in params_and_values.items():
                 try:
                     conditional_prob = trained_model[label][feature][value]
                 except KeyError:
