@@ -1,10 +1,12 @@
 from fastapi import APIRouter
-from services .data_srvicse import DataService
 from typing import Dict, List, Any
 from storage import Storage
-from services.model_service import Model_service
+
+
+from services.Controller import Controller
 
 router = APIRouter()
+controller = Controller()
 storage = Storage()
 
 @router.get("/")
@@ -13,36 +15,36 @@ def hello() -> dict:
 
 @router.get("/get_list_of_files")
 def get_files_list() -> dict:
-    list_of_files = DataService.get_list_files()
+    list_of_files = controller.get_list_files()
     return {"list_of_files":list_of_files}
 
 @router.get("/load_data/{chosen_file}")
 def load_data(chosen_file:str) -> dict:
-    DataService.load_and_store_data(chosen_file, storage)
+    controller.load_and_store_data(chosen_file)
     return {"status":"success"}
 
 @router.get("/get_list_of_columns")
 def get_list_of_columns() ->dict:
-    list_of_columns = DataService.get_list_of_columns_names(storage.raw_data)
+    list_of_columns = controller.get_list_of_columns_names()
     return {"list_of_columns":list_of_columns}
 
 @router.post("/drop_requested_columns")
 def drop_requested_columns(data :Dict[str, Any]) ->dict:
     columns_to_drop = data["columns_to_delete"]
-    DataService.drop_columns(storage, columns_to_drop)
+    controller.drop_columns( columns_to_drop)
     return {"status": "success"}
 
 @router.get("/get_features_and_unique_values")
 def get_features_and_unique_values() ->dict:
-    return Model_service.get_features_and_unique_values(storage)
+    return controller.get_features_and_unique_values()
 
 @router.get("/raw_df_handler")
 def raw_df_handler() -> dict :
-    DataService.prepare_data_for_training(storage)
-    accuracy = Model_service.train_model(storage)
+    controller.prepare_data_for_training()
+    accuracy = controller.train_model()
     return {"accuracy": accuracy}
 
 @router.post("/predict")
 def predict(features_and_values: Dict[str, Any]) -> dict:
-    predict = Model_service.classify(storage,features_and_values)
+    predict = controller.classify(features_and_values)
     return {"predict": predict}
