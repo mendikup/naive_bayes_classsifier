@@ -1,13 +1,11 @@
 from fastapi import APIRouter
 from typing import Dict, List, Any
-from storage import Storage
 
 
 from services.Controller import Controller
 
 router = APIRouter()
 controller = Controller()
-storage = Storage()
 
 @router.get("/")
 def hello() -> dict:

@@ -1,0 +1,13 @@
+name,degree,experience_years,certification,english_level,location,willing_to_travel,worked_remotely_before,hired
+Alice,Bachelor,2,yes,high,Tel Aviv,yes,no,yes
+Boaz,Master,6,no,medium,Haifa,no,yes,yes
+Carmel,PhD,3,yes,high,Beer Sheva,no,no,no
+David,Bachelor,0,no,low,Jerusalem,yes,no,no
+Eli,Master,5,yes,medium,Tel Aviv,yes,yes,yes
+Fatma,Bachelor,4,no,medium,Haifa,no,no,no
+George,Bachelor,7,yes,high,Tel Aviv,no,yes,yes
+Hagar,PhD,1,no,high,Jerusalem,yes,yes,no
+Ilan,Master,2,yes,medium,Netanya,no,no,yes
+Jackie,Bachelor,0,no,low,Afula,no,no,no
+Kfir,Master,8,yes,high,Tel Aviv,yes,yes,yes
+Luna,Bachelor,3,no,medium,Haifa,yes,no,no
