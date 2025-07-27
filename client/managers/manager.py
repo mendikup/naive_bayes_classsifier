@@ -67,26 +67,26 @@ class Manager:
 
 
     def handle_prediction(self):
-        response = requests.get(f"{self.classify_URL}get_features_and_unique_values")
-        if response.ok:
-            data = response.json()
+        res = requests.get(f"{self.classify_URL}get_features_and_unique_values")
+        if res.ok:
+            data = res.json()
             if data["exists"]:
                 features_and_unique_values = data['features_and_unique_values']
                 chosen_params = Menu.get_params(features_and_unique_values)
-                response = requests.post(
+                res = requests.post(
                     f"{self.classify_URL}classify",
                     json=chosen_params
                 )
-                if response.ok:
-                    print(f"according to the prediction the answer is {response.json()['prediction']}")
+                if res.ok:
+                    print(f"according to the prediction the answer is {res.json()['prediction']}")
                 else:
                     print("the was a problem execute the prediction")
-                    print(f"status code: {response.status_code}")
+                    print(f"status code: {res.status_code}")
             else:
                 print("choose a file to work first")
         else:
             print("the was a problem to to get features and unique_values")
-            print(f"status code: {response.status_code}")
+            print(f"status code: {res.status_code}")
 
 
 
@@ -102,9 +102,9 @@ class Manager:
             print("here are all the columns")
             columns_to_delete = []
             # list_of_columns = Extract.extract_columns_list(df)[:-1]
-            response = requests.get(f"{self.URL}/get_list_of_columns")
-            if response.ok:
-                list_of_columns = response.json()["list_of_columns"]
+            res = requests.get(f"{self.URL}/get_list_of_columns")
+            if res.ok:
+                list_of_columns = res.json()["list_of_columns"]
 
                 while len(list_of_columns) > 0:
                     chosen_column = Menu.suggest_options(list_of_columns)
@@ -115,17 +115,17 @@ class Manager:
                         break
                 print("executing..")
 
-                response = requests.post(f"{self.URL}/drop_requested_columns",
+                res = requests.post(f"{self.URL}/drop_requested_columns",
                                          json={"columns_to_delete": columns_to_delete})
-                if response.ok:
+                if res.ok:
                     print("The requested columns has been dropped")
                 else:
                     print("there was a problem dropping the columns you wanted")
-                    print(f"status code: {response.status_code}")
+                    print(f"status code: {res.status_code}")
 
             else:
                 print("There was a problem to get the list of columns")
-                print(f"status code: {response.status_code}")
+                print(f"status code: {res.status_code}")
 
         elif choice == "2":
             print("Here we go")

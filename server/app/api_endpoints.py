@@ -39,7 +39,7 @@ def get_features_and_unique_values() ->dict:
     return api_controller.get_features_and_unique_values()
 
 @router.get("/clean_df_and_train_model")
-def raw_df_handler() -> dict :
+def clean_df_and_train_model() -> dict :
     api_controller.prepare_data_for_training()
     accuracy = api_controller.train_model()
     return {"accuracy": accuracy}
