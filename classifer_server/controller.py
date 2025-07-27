@@ -17,7 +17,7 @@ class Controller:
         else:
             return {"exists": False}
 
-    def update_storage(self):
+    def sync_model_from_remote(self):
         try:
             # response = requests.get("http://my_server:8000/get_latest_model")  # for docker
             response = requests.get("http://127.0.0.1:8000/get_latest_model")

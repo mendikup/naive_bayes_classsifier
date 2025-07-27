@@ -12,9 +12,9 @@ def status() -> dict:
 def get_features_and_unique_values():
     return controller.get_features_and_unique_values()
 
-@router.get("/update_storage")
-def update_storage():
-    controller.update_storage()
+@router.get("/sync_model_from_remote")
+def sync_model_from_remote():
+    controller.sync_model_from_remote()
     return {"status": "success"}
 
 @router.post("/classify")

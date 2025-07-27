@@ -40,7 +40,7 @@ class Manager:
                     if res.ok:
                         accuracy = res.json()["accuracy"]
                         print(f"The testing is over. {accuracy} % Accuracy rate")
-                        res = requests.get(f"{self.classify_URL}update_storage")
+                        res = requests.get(f"{self.classify_URL}sync_model_from_remote")
                         if not res.ok:
                             print(f"there was a problem to load the model , status code: {res.status_code}")
                     else:
