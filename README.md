@@ -85,7 +85,6 @@ python main.py
 ---
 
 ## 🛠️ Potential Improvements
-- ✅ Add persistent storage (pickle, SQLite)
 - ✅ Add API schema validation with Pydantic
 - ✅ Improve error handling and feedback
 - ✅ Add unit tests (e.g. `pytest`)
