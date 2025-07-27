@@ -45,6 +45,8 @@ naive_bayes_classsifier/
 │   ├── core/
 │   │   ├── classifier.py             # Inference logic for trained model
 │   │   └── naive_bayes_trainer.py   # Model training logic (with Laplace smoothing)
+│   ├── dal/
+│   │   └── dal.py                   # Data access layer (e.g. reading CSV files)
 │   ├── services/
 │   │   └── api_controller.py         # Coordinates between app and logic layers
 │   ├── utils/
@@ -136,7 +138,6 @@ python run.py
 
 ## 🛠️ Potential Improvements
 
-* ✅ Add persistent storage (pickle, SQLite)
 * ✅ Add API schema validation with Pydantic
 * ✅ Improve error handling and feedback
 * ✅ Add unit tests (e.g. `pytest`)

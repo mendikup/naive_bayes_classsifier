@@ -1,4 +1,4 @@
-from core.dal.dal import Dal
+from dal.dal import Dal
 from utils.convert_numpy_types import convert_numpy_object_to_numbers
 from utils.extract import Extract
 from utils.cleaner import Cleaner
