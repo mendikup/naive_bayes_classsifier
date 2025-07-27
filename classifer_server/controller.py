@@ -5,7 +5,7 @@ from app_models.classifier import Classifier
 
 class Controller:
     def __init__(self):
-        self.model = None
+        self.trained_model = None
         self.accuracy = None
         self.params_and_values = None
 
@@ -29,7 +29,7 @@ class Controller:
                     accuracy = content['accuracy']
 
                     self.params_and_values = features_and_unique_keys
-                    self.model = trained_model
+                    self.trained_model = trained_model
                     self.accuracy = accuracy
                     print("updated successfully")
         except Exception as e:
@@ -38,4 +38,4 @@ class Controller:
 
 
     def classify(self, selected_features_and_values):
-        return Classifier.get_the_most_probability_predict(self.model, selected_features_and_values)
+        return Classifier.get_the_most_probability_predict(self.trained_model, selected_features_and_values)
