@@ -6,6 +6,7 @@ class Manager:
     def __init__(self):
         # self.URL= "http://0.0.0.0:8000/"  for dockerfile
         self.URL= "http://127.0.0.1:8000/"
+        self.classify_URL = "http://127.0.0.1:8080/"
 
     def run(self):
         running=True
@@ -37,6 +38,9 @@ class Manager:
                     if response.ok:
                         accuracy = response.json()["accuracy"]
                         print(f"The testing is over. {accuracy} % Accuracy rate")
+                        response = requests.get(f"{self.classify_URL}update_storage")
+                        if not response.ok:
+                            print(f"there was a problem to load the model , status code: {response.status_code}")
                     else:
                         print("There was a problem finish the process of handling the data ")
                         print(f"status code: {response.status_code}")
@@ -61,18 +65,18 @@ class Manager:
 
 
     def handle_prediction(self):
-        response = requests.get(f"{self.URL}/get_features_and_unique_values")
+        response = requests.get(f"{self.classify_URL}get_features_and_unique_values")
         if response.ok:
             data = response.json()
             if data["exists"]:
                 features_and_unique_values = data['features_and_unique_values']
                 chosen_params = Menu.get_params(features_and_unique_values)
                 response = requests.post(
-                    f"{self.URL}predict",
+                    f"{self.classify_URL}classify",
                     json=chosen_params
                 )
                 if response.ok:
-                    print(f"according to the prediction the answer is {response.json()['predict']}")
+                    print(f"according to the prediction the answer is {response.json()['prediction']}")
                 else:
                     print("the was a problem execute the prediction")
                     print(f"status code: {response.status_code}")

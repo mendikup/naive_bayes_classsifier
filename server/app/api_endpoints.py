@@ -1,13 +1,13 @@
 from fastapi import APIRouter
 from typing import Dict, List, Any
 from pydantic import BaseModel
-from services.Controller import Controller
+from services.api_controller import ApiController
 
 class DropColumnsRequest(BaseModel):
     columns_to_delete: List[str]
 
 router = APIRouter()
-controller = Controller()
+api_controller = ApiController()
 
 @router.get("/")
 def hello() -> dict:
@@ -15,36 +15,40 @@ def hello() -> dict:
 
 @router.get("/get_list_of_files")
 def get_files_list() -> dict:
-    list_of_files = controller.get_list_files()
+    list_of_files = api_controller.get_list_files()
     return {"list_of_files":list_of_files}
 
 @router.get("/load_data/{chosen_file}")
 def load_data(chosen_file:str) -> dict:
-    controller.load_and_store_data(chosen_file)
+    api_controller.load_and_store_data(chosen_file)
     return {"status":"success"}
 
 @router.get("/get_list_of_columns")
 def get_list_of_columns() ->dict:
-    list_of_columns = controller.get_list_of_columns_names()
+    list_of_columns = api_controller.get_list_of_columns_names()
     return {"list_of_columns":list_of_columns}
 
 @router.post("/drop_requested_columns")
 def drop_requested_columns(data :DropColumnsRequest) ->dict:
-    columns_to_drop = data["columns_to_delete"]
-    controller.drop_columns( columns_to_drop)
+    columns_to_drop = data.columns_to_delete
+    api_controller.drop_columns(columns_to_drop)
     return {"status": "success"}
 
 @router.get("/get_features_and_unique_values")
 def get_features_and_unique_values() ->dict:
-    return controller.get_features_and_unique_values()
+    return api_controller.get_features_and_unique_values()
 
 @router.get("/raw_df_handler")
 def raw_df_handler() -> dict :
-    controller.prepare_data_for_training()
-    accuracy = controller.train_model()
+    api_controller.prepare_data_for_training()
+    accuracy = api_controller.train_model()
     return {"accuracy": accuracy}
 
 @router.post("/predict")
 def predict(features_and_values: Dict[str, Any]) -> dict:
-    predict = controller.classify(features_and_values)
+    predict = api_controller.classify(features_and_values)
     return {"predict": predict}
+
+@router.get("/get_latest_model")
+def get_latest_model():
+    return api_controller.get_latest_model()

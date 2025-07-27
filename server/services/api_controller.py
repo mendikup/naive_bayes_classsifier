@@ -8,7 +8,8 @@ from tests.test_accuracy import Tester
 from core.classifier import Classifier
 
 
-class Controller:
+
+class ApiController:
     def __init__(self):
         self.model = None
         self.accuracy = None
@@ -56,6 +57,17 @@ class Controller:
 
     def classify(self,features_and_unique_values):
         return {Classifier.get_the_most_probability_predict(self.model,features_and_unique_values)}
+
+    def get_latest_model(self):
+        if not self.model:
+            return {"exists":False}
+        else:
+            return {"exists":True,
+                    "trained_model":convert_numpy_object_to_numbers(self.model),
+                    "features_and_unique_keys":convert_numpy_object_to_numbers(self.params_and_values),
+                    "accuracy":self.accuracy
+                    }
+
 
 
 
