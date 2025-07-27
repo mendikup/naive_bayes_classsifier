@@ -1,4 +1,4 @@
-from server.utils.convert_numpy_types import convert_numpy_object_to_numbers
+from utils.convert_numpy_types import convert_numpy_object_to_numbers
 import requests
 from app_models.classifier import Classifier
 
@@ -19,7 +19,7 @@ class Controller:
 
     def update_storage(self):
         try:
-            # response = requests.get("http://baesyan_server_con:8000/get_model_metadata")  # for docker
+            # response = requests.get("http://my_server:8000/get_latest_model")  # for docker
             response = requests.get("http://127.0.0.1:8000/get_latest_model")
             if response.ok:
                 content = response.json()
