@@ -30,7 +30,7 @@ def get_list_of_columns() ->dict:
 
 @router.post("/drop_requested_columns")
 def drop_requested_columns(data :DropColumnsRequest) ->dict:
-    columns_to_drop = data["columns_to_delete"]
+    columns_to_drop = data.columns_to_delete
     controller.drop_columns( columns_to_drop)
     return {"status": "success"}
 
