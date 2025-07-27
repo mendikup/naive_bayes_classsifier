@@ -1,11 +1,11 @@
-from controller import Controller
+from classifer_server.controller import Controller
 from fastapi import APIRouter
 
 router = APIRouter()
 controller = Controller()
 
 @router.get("/")
-def health() -> dict:
+def status() -> dict:
     return {"status": "working"}
 
 @router.get("/get_features_and_unique_values")

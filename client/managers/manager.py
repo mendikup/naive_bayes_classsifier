@@ -29,29 +29,29 @@ class Manager:
 
     def handle_file_selection(self):
         try:
-            response = requests.get(self.URL + "get_list_of_files")
-            if response.ok:
-                list_of_files = response.json()["list_of_files"]
+            res = requests.get(self.URL + "get_list_of_files")
+            if res.ok:
+                list_of_files = res.json()["list_of_files"]
                 chosen_file = Menu.suggest_options(list_of_files)
-                response = requests.get(f"{self.URL}/load_data/{chosen_file}")
-                if response.ok:
+                res = requests.get(f"{self.URL}/load_data/{chosen_file}")
+                if res.ok:
                     self.suggest_user_to_delete_columns()
-                    response = requests.get(f"{self.URL}/raw_df_handler")
-                    if response.ok:
-                        accuracy = response.json()["accuracy"]
+                    res = requests.get(f"{self.URL}/clean_df_and_train_model")
+                    if res.ok:
+                        accuracy = res.json()["accuracy"]
                         print(f"The testing is over. {accuracy} % Accuracy rate")
-                        response = requests.get(f"{self.classify_URL}update_storage")
-                        if not response.ok:
-                            print(f"there was a problem to load the model , status code: {response.status_code}")
+                        res = requests.get(f"{self.classify_URL}update_storage")
+                        if not res.ok:
+                            print(f"there was a problem to load the model , status code: {res.status_code}")
                     else:
                         print("There was a problem finish the process of handling the data ")
-                        print(f"status code: {response.status_code}")
+                        print(f"status code: {res.status_code}")
                 else:
                     print("There was a problem loading the file.")
-                    print(f"Status code: {response.status_code}")
+                    print(f"Status code: {res.status_code}")
             else:
                 print("there was a problem getting list of files")
-                print(f"Status code: {response.status_code}")
+                print(f"Status code: {res.status_code}")
         except Exception as e:
             print(f"Error: {e}")
 
@@ -92,7 +92,7 @@ class Manager:
 
     def suggest_user_to_delete_columns(self):
         """
-        Ask the user if they want to delete any columns before training.
+        Ask the user if he wants to delete any columns before training.
         Allows multiple deletions until the user types 'done'.
         """
 

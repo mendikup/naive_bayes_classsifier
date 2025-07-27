@@ -30,7 +30,6 @@ class ApiController:
         self.raw_data = Cleaner.ensure_there_is_no_nan(self.raw_data)
         self.params_and_values = (convert_numpy_object_to_numbers
                                   (Extract.extract_parameters_and_their_values(self.raw_data)))
-        print(self.params_and_values)
 
     def train_model(self):
         if self.raw_data is None:
