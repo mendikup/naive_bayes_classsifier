@@ -38,8 +38,8 @@ def drop_requested_columns(data :DropColumnsRequest) ->dict:
 def get_features_and_unique_values() ->dict:
     return controller.get_features_and_unique_values()
 
-@router.get("/raw_df_handler")
-def raw_df_handler() -> dict :
+@router.get("/clean_df_and_train_model")
+def clean_df_and_train_model() -> dict :
     controller.prepare_data_for_training()
     accuracy = controller.train_model()
     return {"accuracy": accuracy}
