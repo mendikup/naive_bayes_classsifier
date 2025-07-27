@@ -15,17 +15,16 @@ class Classifier:
         # calculate  probability for each label using conditional probabilities
         final_result = {}
         for label in trained_model["sum"]:
-            likelihoods = []
             if label == "total_cases":
                 continue
-
+            likelihoods = []
             for feature ,value in params_and_values.items():
                 try:
-                    conditional_prob = trained_model[label][feature][value]
+                    prob = trained_model[label][feature][value]
                 except KeyError:
-                    conditional_prob = 1e-10  #if the specific value is missing we add min value
+                    prob = 1e-10  #if the specific value is missing we add min value
 
-                likelihoods.append(conditional_prob)
+                likelihoods.append(prob)
 
             likelihoods.append(trained_model['sum'][label] / trained_model['sum']['total_cases'])
             likelihoods = np.array(likelihoods)

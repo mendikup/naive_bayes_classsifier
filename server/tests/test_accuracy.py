@@ -9,12 +9,12 @@ class Tester:
         """
               Calculates how many predictions match the true labels in the test set.
 
-              :param model: trained Naive Bayes model.
+              :param trained_model: trained Naive Bayes model.
               :param test_df: DataFrame with same structure as training set.
               :return: Accuracy percentage (0–100).
               """
-        if len(test_df.index) == 0:
-            return 0
+        if test_df.empty:
+            return 0.0
 
         correct = 0
         # Iterate over each row, predict its class, compare with actual label

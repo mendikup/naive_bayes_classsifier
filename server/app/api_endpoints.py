@@ -1,8 +1,10 @@
 from fastapi import APIRouter
 from typing import Dict, List, Any
-
-
+from pydantic import BaseModel
 from services.Controller import Controller
+
+class DropColumnsRequest(BaseModel):
+    columns_to_delete: List[str]
 
 router = APIRouter()
 controller = Controller()
@@ -27,7 +29,7 @@ def get_list_of_columns() ->dict:
     return {"list_of_columns":list_of_columns}
 
 @router.post("/drop_requested_columns")
-def drop_requested_columns(data :Dict[str, Any]) ->dict:
+def drop_requested_columns(data :DropColumnsRequest) ->dict:
     columns_to_drop = data["columns_to_delete"]
     controller.drop_columns( columns_to_drop)
     return {"status": "success"}

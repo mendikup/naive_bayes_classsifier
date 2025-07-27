@@ -8,13 +8,19 @@ class Menu:
     @staticmethod
     def show_menu():
         print("\nwhat would you like to do")
-        choise= input("1. select a local csv file to work with\n"
-                      "2. copy URL for a csv file\n"
-                      "3. Analyze by bayesian model statistics")
-        return choise
+        choice= input("1. Select a local csv file to work with\n"
+                      "2. Copy URL for a csv file\n"
+                      "3. Analyze by bayesian model statistics\n"
+                      "4. Exit\n")
+
+        return choice
 
     @staticmethod
-    def suggest_options(options: list) -> str:
+    def suggest_options(options: list) :
+        if not options:
+            print("No options available.")
+            return None
+
         print("Please select an option:")
         for i, option in enumerate(options, start=1):
             print(f"{i}. {option}")
@@ -29,7 +35,7 @@ class Menu:
     @staticmethod
     def get_params(parameters:dict) ->dict:
         """
-               Ask the user to choose a value for each parameter (feature).
+               Prompt user to choose a value for each parameter (feature).
 
                :param parameters: {column_name: [possible_values]}
                :return: {column_name: chosen_value}

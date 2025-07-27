@@ -1,3 +1,4 @@
+
 import pandas as pd
 import os
 
@@ -10,17 +11,16 @@ class Dal:
 
     @staticmethod
     def load_data(file):
-        path=f"data/{file}"
-        print(path)
-        # path = os.path.join("data", file)
+        # path=f"data/{file}"
+        path = os.path.join("data" ,file)
+        if not os.path.exists(path):
+             raise FileNotFoundError (f"file not found: {path}")
 
-        # print(os.path.dirname(path))
-        if os.path.exists(path):
-            print("tesssssssssssssssssssssssssssssssssssssssssssssssssssssss")
-        else:
-            print("nooooooooooooooooooooooooooooooooooooooooooooooo")
-        df = pd.read_csv(path)
-        return df
+        try:
+            df = pd.read_csv(path)
+            return df
+        except Exception as e:
+            raise ValueError (f"Failed to load CSV: {e}")
 
     @staticmethod
     def get_list_of_files():
