@@ -4,13 +4,13 @@ from utils.extract import Extract
 from utils.cleaner import Cleaner
 from sklearn.model_selection import train_test_split
 from core.naive_bayes_trainer import NaiveBayesTrainer
-from tests.test_accuracy import Tester
+from utils.test_accuracy import Tester
 from core.classifier import Classifier
 
 
 class Controller:
     def __init__(self):
-        self.model = None
+        self.trained_model = None
         self.accuracy = None
         self.params_and_values = None
         self.raw_data = None
@@ -29,14 +29,14 @@ class Controller:
         self.raw_data = Cleaner.ensure_there_is_no_nan(self.raw_data)
         self.params_and_values = (convert_numpy_object_to_numbers
                                   (Extract.extract_parameters_and_their_values(self.raw_data)))
-        print(self.params_and_values)
+
 
     def train_model(self):
         if self.raw_data is None:
             raise ValueError("No data loaded")
         df_to_train, test_df = train_test_split(self.raw_data, test_size=0.3)
-        self.model = NaiveBayesTrainer.train_model(df_to_train)
-        self.accuracy = Tester.check_accuracy_percentage(self.model, test_df)
+        self.trained_model = NaiveBayesTrainer.train_model(df_to_train)
+        self.accuracy = Tester.check_accuracy_percentage(self.trained_model, test_df)
         return self.accuracy
 
     def get_list_of_columns_names(self):
@@ -55,7 +55,7 @@ class Controller:
             return {"exists":False}
 
     def classify(self,features_and_unique_values):
-        return {Classifier.get_the_most_probability_predict(self.model,features_and_unique_values)}
+        return {Classifier.get_the_most_probability_predict(self.trained_model, features_and_unique_values)}
 
 
 
