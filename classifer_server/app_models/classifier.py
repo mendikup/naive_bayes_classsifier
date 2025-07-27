@@ -14,7 +14,8 @@ class Classifier:
 
         # calculate  probability for each label using conditional probabilities
         final_result = {}
-        for label in trained_model["sum"]:
+        for label in trained_model["sum"]: # "sum"  key is referenced to amount of total cases/rows ,amount of each
+                                           # cases for specific label in the the table
             if label == "total_cases":
                 continue
             likelihoods = []

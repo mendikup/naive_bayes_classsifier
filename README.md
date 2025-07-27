@@ -65,11 +65,6 @@ naive_bayes_classsifier/
 │   │   ├── test_accuracy.py
 │   │   └── tester.py
 │   └── data/                  # Example CSV files
-│       ├── basic.csv
-│       ├── data2.csv
-│       ├── naive_hiring_data.csv
-│       ├── synthetic_balanced_data.csv
-│       └── voice_features_discretized.csv
 │
 ├── shared/                   # (Planned) shared modules to avoid duplication
 │   └── classifier.py
