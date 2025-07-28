@@ -25,17 +25,9 @@ class ApiController:
 
     @staticmethod
     def get_list_files() -> list:
-        """
-        Returns a list of available CSV files from the DAL.
-        """
         return Dal.get_list_of_files()
 
     def load_and_store_data(self, file_name):
-        """
-        Loads the data from the given file and stores it in memory.
-
-        :param file_name: The name of the CSV file to load.
-        """
         df = Dal.load_data(file_name)
         self.raw_data = df
 
