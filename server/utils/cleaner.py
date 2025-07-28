@@ -18,10 +18,12 @@ class Cleaner:
 
     @staticmethod
     def drop_empty_rows(df):
+        """Drops empty rows and columns with >60% NaN values."""
         return  df.dropna(axis=0).copy()
 
     @staticmethod
     def drop_columns_with_nan_above_threshold(df, threshold=0.6):
+        """Drops columns with more than threshold% NaN values."""
         num_of_rows = len(df.index)
         columns_to_drop = []
         for column in df.columns:
