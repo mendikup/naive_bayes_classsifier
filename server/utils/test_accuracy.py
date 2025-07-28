@@ -7,12 +7,12 @@ class Tester:
     @staticmethod
     def check_accuracy_percentage(trained_model, test_df):
         """
-              Calculates how many predictions match the true labels in the test set.
+        Calculates how many predictions match the true labels in the test set.
 
-              :param trained_model: trained Naive Bayes model.
-              :param test_df: DataFrame with same structure as training set.
-              :return: Accuracy percentage (0–100).
-              """
+        :param trained_model: trained Naive Bayes model.
+        :param test_df: DataFrame with same structure as training set.
+        :return: Accuracy percentage (0–100).
+        """
         if test_df.empty:
             return 0.0
 
