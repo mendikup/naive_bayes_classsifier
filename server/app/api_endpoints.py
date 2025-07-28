@@ -11,9 +11,6 @@ api_controller = ApiController()
 
 @router.get("/")
 def health() -> dict:
-    """
-    Basic server health check.
-    """
     return {"status": "ok"}
 
 @router.get("/get_list_of_files")
