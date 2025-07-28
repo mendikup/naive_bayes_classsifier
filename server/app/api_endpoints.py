@@ -11,9 +11,6 @@ controller = Controller()
 
 @router.get("/")
 def health() -> dict:
-    """
-    Basic server health check endpoint.
-    """
     return {"status": "ok"}
 
 @router.get("/get_list_of_files")
