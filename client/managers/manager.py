@@ -4,8 +4,8 @@ import requests
 class Manager:
 
     def __init__(self):
-        # self.URL= "http://0.0.0.0:8000/"  for dockerfile
-        self.URL= "http://127.0.0.1:8000/"
+        self.URL = "http://my_server_v1:8001/" #for dockerfile
+        # self.URL= "http://127.0.0.1:8000/"
 
     def run(self):
         running=True
