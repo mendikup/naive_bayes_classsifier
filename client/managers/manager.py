@@ -11,9 +11,8 @@ class Manager:
         # self.URL= "http://my_server:8000/"  # for Dockerfile
         # self.classify_URL = "http://my_classifier_server:8080/"  # for Dockerfile
 
-        self.URL= "http://127.0.0.1:8000/"
         # Set base URLs for the main server and the classifier server
-        self.URL = "http://127.0.0.1:8000/
+        self.URL= "http://127.0.0.1:8000/"
         self.classify_URL = "http://127.0.0.1:8080/"
 
     def run(self):
