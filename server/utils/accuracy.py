@@ -1,18 +1,18 @@
-from core.classifier import Classifier
+from server.core.classifier import Classifier
+
 
 class Tester:
-    """
-    Utility class to test model accuracy on labeled test data.
-    """
+    """Utility class to test model accuracy on labeled test data."""
+
     @staticmethod
     def check_accuracy_percentage(trained_model, test_df):
         """
-              Calculates how many predictions match the true labels in the test set.
+        Calculates how many predictions match the true labels in the test set.
 
-              :param trained_model: trained Naive Bayes model.
-              :param test_df: DataFrame with same structure as training set.
-              :return: Accuracy percentage (0–100).
-              """
+        :param trained_model: trained Naive Bayes model.
+        :param test_df: DataFrame with same structure as training set.
+        :return: Accuracy percentage (0–100).
+        """
         if test_df.empty:
             return 0.0
 
@@ -24,8 +24,11 @@ class Tester:
             row_values = test_df.iloc[i, :-1]
             for inx_row in row_values.index:
                 params_and_values[inx_row] = row_values[inx_row]
-            predicted = Classifier.get_the_most_probability_predict(trained_model, params_and_values)
+            predicted = Classifier.get_the_most_probability_predict(
+                trained_model, params_and_values
+            )
             if predicted == expected:
                 correct_guesses += 1
 
         return (correct_guesses / len(test_df.index)) * 100
+
