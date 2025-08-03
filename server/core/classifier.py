@@ -1,4 +1,4 @@
-import  numpy as np
+import numpy as np
 
 class Classifier:
 
@@ -12,17 +12,17 @@ class Classifier:
         :return: Most probable class label.
         """
 
-        # calculate  probability for each label using conditional probabilities
+        # Calculate probability for each label using conditional probabilities
         final_result = {}
         for label in trained_model["sum"]:
             if label == "total_cases":
                 continue
             likelihoods = []
-            for feature ,value in params_and_values.items():
+            for feature, value in params_and_values.items():
                 try:
                     prob = trained_model[label][feature][value]
                 except KeyError:
-                    prob = 1e-10  #if the specific value is missing we add min value
+                    prob = 1e-10  # If the specific value is missing, use a minimal probability
 
                 likelihoods.append(prob)
 

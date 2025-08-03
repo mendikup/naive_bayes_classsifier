@@ -1,4 +1,4 @@
-from utils.convert_numpy_types import convert_numpy_object_to_numbers
+from .utils.convert_numpy_types import convert_numpy_object_to_numbers
 import requests
 from app_models.classifier import Classifier
 
@@ -71,3 +71,4 @@ class Controller:
             self.trained_model,
             selected_features_and_values
         )
+

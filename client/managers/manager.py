@@ -3,19 +3,17 @@ import requests
 
 class Manager:
     """
-    Handles the main user interface and interaction with the server APIs.
-    Offers options to train a model, drop columns, and classify input.
+    Handles user interaction and communication with the server and classifier APIs.
+    Provides options to load data, train models, and make predictions.
     """
 
     def __init__(self):
-        # Set base URLs for the main server and the classifier server
+        """Initializes the Manager with base URLs for both servers."""
         self.URL = "http://127.0.0.1:8000/"
         self.classify_URL = "http://127.0.0.1:8080/"
 
     def run(self):
-        """
-        Starts the main menu loop and responds to user input.
-        """
+        """Starts the main menu loop and executes user-selected actions."""
         running = True
         while running:
             user_selection = Menu.show_menu()
@@ -31,101 +29,83 @@ class Manager:
                 print("invalid input, try again")
 
     def handle_file_selection(self):
-        """
-        Guides the user to:
-        - Choose a file
-        - Optionally drop columns
-        - Train the model
-        - Sync the trained model to the classifier server
-        """
+        """Allows user to select a file, optionally drop columns, train the model, and sync it."""
         try:
-            res = requests.get(self.URL + "get_list_of_files")
+            res = requests.get(self.URL + "get_list_of_files", timeout=5)
             if res.ok:
                 list_of_files = res.json()["list_of_files"]
                 chosen_file = Menu.suggest_options(list_of_files)
-                res = requests.get(f"{self.URL}/load_data/{chosen_file}")
+                res = requests.get(f"{self.URL}/load_data/{chosen_file}", timeout=5)
                 if res.ok:
                     self.suggest_user_to_delete_columns()
-                    res = requests.get(f"{self.URL}/clean_df_and_train_model")
+                    res = requests.get(f"{self.URL}/clean_df_and_train_model", timeout=10)
                     if res.ok:
                         accuracy = res.json()["accuracy"]
-                        print(f"The testing is over. {accuracy} % Accuracy rate")
-                        res = requests.get(f"{self.classify_URL}sync_model_from_remote")
+                        print(f"The testing is over. {accuracy}% Accuracy rate")
+                        res = requests.get(f"{self.classify_URL}sync_model_from_remote", timeout=5)
                         if not res.ok:
-                            print(f"There was a problem loading the model. Status code: {res.status_code}")
+                            print(f"Problem syncing model. {res.status_code}: {res.text}")
                     else:
-                        print("Problem finishing data handling.")
-                        print(f"Status code: {res.status_code}")
+                        print(f"Problem finishing training. {res.status_code}: {res.text}")
                 else:
-                    print("Problem loading file.")
-                    print(f"Status code: {res.status_code}")
+                    print(f"Problem loading file. {res.status_code}: {res.text}")
             else:
-                print("Problem getting file list.")
-                print(f"Status code: {res.status_code}")
-        except Exception as e:
-            print(f"Error: {e}")
+                print(f"Problem getting file list. {res.status_code}: {res.text}")
+        except requests.exceptions.RequestException as e:
+            print(f"Request error: {e}")
 
     def handle_url_input(self):
-        """
-        Placeholder for letting the user input a dataset URL.
-        Currently not implemented.
-        """
+        """Placeholder for URL input feature (currently not implemented)."""
         url = input("Enter a link or URL: ")
-        # Feature not implemented
+        print("Feature not implemented yet.")
 
     def handle_prediction(self):
-        """
-        Gets feature options from the classifier server,
-        lets the user select values, and shows the prediction result.
-        """
-        res = requests.get(f"{self.classify_URL}get_features_and_unique_values")
-        if res.ok:
-            data = res.json()
-            if data["exists"]:
-                features_and_unique_values = data['features_and_unique_values']
-                chosen_params = Menu.get_params(features_and_unique_values)
-                res = requests.post(f"{self.classify_URL}classify", json=chosen_params)
-                if res.ok:
-                    print(f"Prediction: {res.json()['prediction']}")
+        """Allows the user to input features and receive a class prediction."""
+        try:
+            res = requests.get(f"{self.classify_URL}get_features_and_unique_values", timeout=5)
+            if res.ok:
+                data = res.json()
+                if data["exists"]:
+                    features_and_unique_values = data['features_and_unique_values']
+                    chosen_params = Menu.get_params(features_and_unique_values)
+                    res = requests.post(f"{self.classify_URL}predict", json=chosen_params, timeout=5)
+                    if res.ok:
+                        print(f"Prediction: {res.json()['prediction']}")
+                    else:
+                        print(f"Prediction failed. {res.status_code}: {res.text}")
                 else:
-                    print("Problem executing prediction.")
-                    print(f"Status code: {res.status_code}")
+                    print("Please choose a file and train first.")
             else:
-                print("Please choose a file and train first.")
-        else:
-            print("Problem getting features.")
-            print(f"Status code: {res.status_code}")
+                print(f"Failed to fetch features. {res.status_code}: {res.text}")
+        except requests.exceptions.RequestException as e:
+            print(f"Connection error: {e}")
 
     def suggest_user_to_delete_columns(self):
-        """
-        Ask the user if they want to delete columns before training.
-        Allows choosing multiple columns until 'done' is typed.
-        """
+        """Guides the user through optional column removal before training."""
         choice = input("1. delete column(s) before training\n2. continue to training\n")
         if choice == "1":
-            print("Here are all the columns:")
             columns_to_delete = []
-            res = requests.get(f"{self.URL}/get_list_of_columns")
-            if res.ok:
-                list_of_columns = res.json()["list_of_columns"]
-                while len(list_of_columns) > 0:
-                    chosen_column = Menu.suggest_options(list_of_columns)
-                    columns_to_delete.append(chosen_column)
-                    list_of_columns.remove(chosen_column)
-                    done = input("Type 'done' to finish, any other key to continue: ")
-                    if done == "done":
-                        break
-                print("Executing column removal...")
-                res = requests.post(f"{self.URL}/drop_requested_columns",
-                                    json={"columns_to_delete": columns_to_delete})
+            try:
+                res = requests.get(f"{self.URL}/get_list_of_columns", timeout=5)
                 if res.ok:
-                    print("Columns removed successfully.")
+                    list_of_columns = res.json()["list_of_columns"]
+                    while list_of_columns:
+                        chosen = Menu.suggest_options(list_of_columns)
+                        columns_to_delete.append(chosen)
+                        list_of_columns.remove(chosen)
+                        done = input("Type 'done' to finish, any other key to continue: ")
+                        if done == "done":
+                            break
+                    res = requests.post(f"{self.URL}/drop_requested_columns",
+                                        json={"columns_to_delete": columns_to_delete}, timeout=5)
+                    if res.ok:
+                        print("Columns removed successfully.")
+                    else:
+                        print(f"Failed to remove columns. {res.status_code}: {res.text}")
                 else:
-                    print("Problem removing columns.")
-                    print(f"Status code: {res.status_code}")
-            else:
-                print("Problem getting column list.")
-                print(f"Status code: {res.status_code}")
+                    print(f"Failed to get columns. {res.status_code}: {res.text}")
+            except requests.exceptions.RequestException as e:
+                print(f"Error during column deletion: {e}")
         elif choice == "2":
             print("Proceeding to training...")
         else:

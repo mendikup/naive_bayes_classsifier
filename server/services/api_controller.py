@@ -4,7 +4,7 @@ from utils.extract import Extract
 from utils.cleaner import Cleaner
 from sklearn.model_selection import train_test_split
 from core.naive_bayes_trainer import NaiveBayesTrainer
-from utils.test_accuracy import Tester
+from utils.accuracy import Tester
 from core.classifier import Classifier
 
 
