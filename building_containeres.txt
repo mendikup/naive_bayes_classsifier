@@ -1,0 +1,3 @@
+docker run -d --name my_server --network bayesian_network -p 8000:8000 bayesian_server
+docker run -d --name my_classifier_server --network bayesian_network -p 8080:8080 bayesian_classifer_server
+docker run -it --name my_client --network bayesian_network bayesian_client

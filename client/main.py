@@ -1,5 +1,9 @@
-from client.managers.manager import Manager
+from managers.manager import Manager
 
-manager=Manager()
+def main():
+    """Entry point for the client application."""
+    manager=Manager()
+    manager.run()
 
-manager.run()
+if __name__ == "__main__":
+    main()
