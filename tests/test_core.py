@@ -1,9 +1,5 @@
-import sys
-from pathlib import Path
 
 import pandas as pd
-
-sys.path.append(str(Path(__file__).resolve().parents[1]))
 from server.core.naive_bayes_trainer import NaiveBayesTrainer
 from server.core.classifier import Classifier
 
