@@ -26,8 +26,8 @@ naive_bayes_classsifier/
 │   │   └── menu.py                   # CLI menu interface logic
 │   └── requirements.txt              # Client-side dependencies
 │
-├── classifer_server/                 # Stateless prediction service
-│   ├── run_classifier_serrver.py     # Launch FastAPI server for classification
+├── classifier_server/                 # Stateless prediction service
+│   ├── run_classifier_server.py     # Launch FastAPI server for classification
 │   ├── controller.py                 # Maintains current model and parameters
 │   ├── app_models/
 │   │   └── classifier.py             # Actual classification logic using trained model
@@ -99,8 +99,8 @@ naive_bayes_classsifier/
 ### 🖥️ Start the Classifier Server:
 
 ```bash
-cd classifer_server
-python run_classifier_serrver.py
+cd classifier_server
+python run_classifier_server.py
 ```
 
 ### 🧑‍💻 Start the CLI:

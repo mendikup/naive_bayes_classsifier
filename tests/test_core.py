@@ -1,7 +1,5 @@
 
-
 import pandas as pd
-
 from server.core.naive_bayes_trainer import NaiveBayesTrainer
 from server.core.classifier import Classifier
 

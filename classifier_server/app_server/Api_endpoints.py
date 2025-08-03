@@ -1,4 +1,4 @@
-from classifer_server.controller import Controller
+from classifier_server.controller import Controller
 from fastapi import APIRouter
 
 router = APIRouter()
@@ -19,4 +19,5 @@ def sync_model_from_remote():
 
 @router.post("/classify")
 def classification(selected_params_and_values: dict[str, str]) -> dict:
-    return {"prediction":controller.classify(selected_params_and_values)}
+    return {"prediction": controller.classify(selected_params_and_values)}
+
