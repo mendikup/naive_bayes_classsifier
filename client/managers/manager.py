@@ -2,32 +2,42 @@ from ui.menu import Menu
 import requests
 
 class Manager:
+    """
+    Handles the main user interface and interaction with the server APIs.
+    Offers options to train a model, drop columns, and classify input.
+    """
 
     def __init__(self):
-        # self.URL= "http://my_server:8000/"  #for dockerfile
-        # self.classify_URL = "http://my_classifier_server:8080/" #for dockerfile
-
-        self.URL= "http://127.0.0.1:8000/"
+        # Set base URLs for the main server and the classifier server
+        self.URL = "http://127.0.0.1:8000/"
         self.classify_URL = "http://127.0.0.1:8080/"
 
     def run(self):
-        running=True
+        """
+        Starts the main menu loop and responds to user input.
+        """
+        running = True
         while running:
-            user_selection=Menu.show_menu()
-            if user_selection=="1":
-                 self.handle_file_selection()
+            user_selection = Menu.show_menu()
+            if user_selection == "1":
+                self.handle_file_selection()
             elif user_selection == "2":
                 self.handle_url_input()
-            elif user_selection== "3":
+            elif user_selection == "3":
                 self.handle_prediction()
             elif user_selection == "4":
                 running = False
-
             else:
-                print("invalid input,try again")
-
+                print("invalid input, try again")
 
     def handle_file_selection(self):
+        """
+        Guides the user to:
+        - Choose a file
+        - Optionally drop columns
+        - Train the model
+        - Sync the trained model to the classifier server
+        """
         try:
             res = requests.get(self.URL + "get_list_of_files")
             if res.ok:
@@ -42,94 +52,82 @@ class Manager:
                         print(f"The testing is over. {accuracy} % Accuracy rate")
                         res = requests.get(f"{self.classify_URL}sync_model_from_remote")
                         if not res.ok:
-                            print(f"there was a problem to load the model , status code: {res.status_code}")
+                            print(f"There was a problem loading the model. Status code: {res.status_code}")
                     else:
-                        print("There was a problem finish the process of handling the data ")
-                        print(f"status code: {res.status_code}")
+                        print("Problem finishing data handling.")
+                        print(f"Status code: {res.status_code}")
                 else:
-                    print("There was a problem loading the file.")
+                    print("Problem loading file.")
                     print(f"Status code: {res.status_code}")
             else:
-                print("there was a problem getting list of files")
+                print("Problem getting file list.")
                 print(f"Status code: {res.status_code}")
         except Exception as e:
             print(f"Error: {e}")
 
-
-    def  handle_url_input(self):
-        # try:
-        url = input("Enter a link or URL")
-        # raw_data_as_list_of_dict = requests.get(f"{url}/load_data/{chosen_file}").json()["data"]
-        # raw_data = pd.DataFrame(raw_data_as_list_of_dict)
-        #
-        # except Exception as e:
-        #     print(f"Error: {e}"
-
+    def handle_url_input(self):
+        """
+        Placeholder for letting the user input a dataset URL.
+        Currently not implemented.
+        """
+        url = input("Enter a link or URL: ")
+        # Feature not implemented
 
     def handle_prediction(self):
+        """
+        Gets feature options from the classifier server,
+        lets the user select values, and shows the prediction result.
+        """
         res = requests.get(f"{self.classify_URL}get_features_and_unique_values")
         if res.ok:
             data = res.json()
             if data["exists"]:
                 features_and_unique_values = data['features_and_unique_values']
                 chosen_params = Menu.get_params(features_and_unique_values)
-                res = requests.post(
-                    f"{self.classify_URL}classify",
-                    json=chosen_params
-                )
+                res = requests.post(f"{self.classify_URL}classify", json=chosen_params)
                 if res.ok:
-                    print(f"according to the prediction the answer is {res.json()['prediction']}")
+                    print(f"Prediction: {res.json()['prediction']}")
                 else:
-                    print("the was a problem execute the prediction")
-                    print(f"status code: {res.status_code}")
+                    print("Problem executing prediction.")
+                    print(f"Status code: {res.status_code}")
             else:
-                print("choose a file to work first")
+                print("Please choose a file and train first.")
         else:
-            print("the was a problem to to get features and unique_values")
-            print(f"status code: {res.status_code}")
-
-
+            print("Problem getting features.")
+            print(f"Status code: {res.status_code}")
 
     def suggest_user_to_delete_columns(self):
         """
-        Ask the user if he wants to delete any columns before training.
-        Allows multiple deletions until the user types 'done'.
+        Ask the user if they want to delete columns before training.
+        Allows choosing multiple columns until 'done' is typed.
         """
-
-        choice = input("1.  delete any column of the table before training\n"
-                       "2.  continue to training")
+        choice = input("1. delete column(s) before training\n2. continue to training\n")
         if choice == "1":
-            print("here are all the columns")
+            print("Here are all the columns:")
             columns_to_delete = []
-            # list_of_columns = Extract.extract_columns_list(df)[:-1]
             res = requests.get(f"{self.URL}/get_list_of_columns")
             if res.ok:
                 list_of_columns = res.json()["list_of_columns"]
-
                 while len(list_of_columns) > 0:
                     chosen_column = Menu.suggest_options(list_of_columns)
                     columns_to_delete.append(chosen_column)
                     list_of_columns.remove(chosen_column)
-                    done = input("write 'done' to execute, any other key to continue inserting")
+                    done = input("Type 'done' to finish, any other key to continue: ")
                     if done == "done":
                         break
-                print("executing..")
-
+                print("Executing column removal...")
                 res = requests.post(f"{self.URL}/drop_requested_columns",
-                                         json={"columns_to_delete": columns_to_delete})
+                                    json={"columns_to_delete": columns_to_delete})
                 if res.ok:
-                    print("The requested columns has been dropped")
+                    print("Columns removed successfully.")
                 else:
-                    print("there was a problem dropping the columns you wanted")
-                    print(f"status code: {res.status_code}")
-
+                    print("Problem removing columns.")
+                    print(f"Status code: {res.status_code}")
             else:
-                print("There was a problem to get the list of columns")
-                print(f"status code: {res.status_code}")
-
+                print("Problem getting column list.")
+                print(f"Status code: {res.status_code}")
         elif choice == "2":
-            print("Here we go")
-
+            print("Proceeding to training...")
         else:
-            print("invalid input")
+            print("Invalid input.")
             self.suggest_user_to_delete_columns()
