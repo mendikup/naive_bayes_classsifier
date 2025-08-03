@@ -2,8 +2,6 @@
 
 A modular learning project implementing a Naive Bayes classifier using a microservices-based architecture, with a clear separation between a Python CLI, a data-processing server, and a classification server.
 
----
-
 ## ✨ Features
 
 * 📂 Load and manage CSV files
@@ -11,8 +9,7 @@ A modular learning project implementing a Naive Bayes classifier using a microse
 * 📊 Train a Naive Bayes classifier (with Laplace smoothing)
 * 🎯 Evaluate classifier accuracy using test split (30%)
 * 🧮 Predict classes from user input via `classifier_server`
-
----
+* 📬 Sync model from training server to prediction server
 
 ## 📂 Project Structure and Responsibilities
 
@@ -24,7 +21,7 @@ naive_bayes_classsifier/
 │   │   └── manager.py                # Handles user requests and orchestrates flow
 │   ├── ui/
 │   │   └── menu.py                   # CLI menu interface logic
-│   └── requirements.txt              # Client-side dependencies
+│   └── __init__.py
 │
 ├── classifier_server/                 # Stateless prediction service
 │   ├── run_classifier_server.py     # Launch FastAPI server for classification
@@ -32,7 +29,8 @@ naive_bayes_classsifier/
 │   ├── app_models/
 │   │   └── classifier.py             # Actual classification logic using trained model
 │   ├── app_server/
-│   │   └── Api_endpoints.py          # API routes for prediction and syncing model
+│   │   ├── Api_endpoints.py          # API routes for prediction and syncing model
+│   │   └── app.py                    # FastAPI app setup
 │   ├── utils/
 │   │   └── convert_numpy_types.py    # Type converters for JSON compatibility
 │   └── requirements.txt              # Server-side dependencies for classifier
@@ -53,12 +51,15 @@ naive_bayes_classsifier/
 │   │   ├── cleaner.py                # Data cleaning utilities
 │   │   ├── convert_numpy_types.py   # Converts numpy types for JSON
 │   │   └── extract.py                # Extracts column names, unique values, etc.
-│   └── data/                         # Sample CSV datasets for demo purposes
+│   ├── __init__.py
+│   └── requirements.txt              # Dependencies for training server
 │
-└── README.md
+├── tests/
+│   └── test_core.py                  # Basic test coverage for trainer and classifier
+│
+├── README.md
+└── building_containers.txt           # Manual Docker build/run instructions
 ```
-
----
 
 ## 📡 API Endpoints Overview
 
@@ -81,20 +82,32 @@ naive_bayes_classsifier/
 | `/sync_model_from_remote`         | GET    | Load model from server            |
 | `/classify`                       | POST   | Predict outcome based on features |
 
----
+## 🧱 Flow of Operations
 
-## 🔁 Flow of Operations
-
-1. **Get file list:** `GET /get_list_of_files`
-2. **Load data file:** `GET /load_data/{filename}`
-3. **Drop columns (optional):** `POST /drop_requested_columns`
-4. **Train model:** `GET /clean_df_and_train_model`
-5. **Sync classifier:** `GET /sync_model_from_remote`
-6. **Predict result:** `POST /classify` with JSON payload
-
----
+1. Get file list: `GET /get_list_of_files`
+2. Load data file: `GET /load_data/{filename}`
+3. Drop columns (optional): `POST /drop_requested_columns`
+4. Train model: `GET /clean_df_and_train_model`
+5. Sync classifier: `GET /sync_model_from_remote`
+6. Predict result: `POST /classify` with JSON payload
 
 ## ⚙️ How to Run
+
+### 🔧 Install dependencies:
+
+```bash
+# For server
+cd server
+pip install -r requirements.txt
+
+# For classifier server
+cd classifier_server
+pip install -r requirements.txt
+
+# For client (optional)
+cd client
+pip install -r requirements.txt
+```
 
 ### 🖥️ Start the Classifier Server:
 
@@ -110,22 +123,18 @@ cd client
 python main.py
 ```
 
-### 🧪 Start the Internal Training Server (Optional):
+### 🧪 Start the Internal Training Server:
 
 ```bash
 cd server
 python run.py
 ```
 
----
-
 ## 🛠 Requirements
 
 * Python 3.9+
 * fastapi, uvicorn
 * pandas, numpy, requests
-
----
 
 ## 🧠 Notes
 
@@ -134,10 +143,11 @@ python run.py
 * `classifier_server` performs predictions only, while `server/` handles training logic.
 * This modular design enables flexibility and testing of each component independently.
 
----
-
 ## 🛠️ Potential Improvements
 
 * ✅ Add API schema validation with Pydantic
 * ✅ Improve error handling and feedback
-* ✅ Add unit tests (e.g. `pytest`)
+* ✅ Add more unit tests with pytest
+* 🚀 Switch to async FastAPI endpoints for scalability
+* 📦 Add persistence layer to save/load trained model
+* 🔁 Use httpx in client instead of requests for async support
